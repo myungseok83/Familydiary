@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>K-POP BEAT ARCADE</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#08020f;
+  --bg2:#160a29;
+  --cyan:#00f0ff;
+  --magenta:#ff2d95;
+  --gold:#ffd23f;
+  --violet:#8b5cf6;
+  --white:#f5f3ff;
+  --miss:#ff4757;
+  --great:#39ff88;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent; touch-action:manipulation;}
+html,body{margin:0;padding:0;height:100%;background:var(--bg);overflow:hidden;font-family:'Rajdhani',sans-serif;color:var(--white);user-select:none;
+  position:fixed;inset:0;overscroll-behavior:none;-webkit-user-select:none;}
+#app{position:relative;width:100%;height:100%;height:100dvh;background:
+  radial-gradient(ellipse at 50% 0%, #2a0e46 0%, var(--bg) 60%);
+  overflow:hidden;}
+
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;}
+.screen.active{display:flex;}
+
+/* ---------- TITLE ---------- */
+#title-screen{gap:18px; padding: 20px 10px;}
+.logo{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(30px,7vw,64px);
+  letter-spacing:3px;text-align:center;line-height:1.05;
+  background:linear-gradient(90deg,var(--cyan),var(--magenta),var(--gold));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 18px rgba(255,45,149,.55));
+  animation:hueShift 6s linear infinite;}
+@keyframes hueShift{0%{filter:drop-shadow(0 0 18px rgba(0,240,255,.55));}
+  50%{filter:drop-shadow(0 0 18px rgba(255,45,149,.55));}
+  100%{filter:drop-shadow(0 0 18px rgba(0,240,255,.55));}}
+.subtitle{font-size:13px;letter-spacing:5px;color:var(--cyan);opacity:.8;text-transform:uppercase;}
+.song-list{display:flex;flex-direction:column;gap:10px;width:min(92vw,460px);margin-top:6px;max-height:50vh;overflow-y:auto;}
+.song-card{position:relative;padding:14px 18px;border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;background:linear-gradient(135deg,rgba(255,45,149,.08),rgba(0,240,255,.06));
+  cursor:pointer;transition:.15s;overflow:hidden;}
+.song-card:hover,.song-card:active{border-color:var(--cyan);transform:translateX(4px);
+  box-shadow:0 0 22px rgba(0,240,255,.35);}
+.song-card .stitle{font-family:'Orbitron';font-size:16px;font-weight:700;letter-spacing:1px;}
+.song-card .smeta{font-size:12px;color:var(--gold);margin-top:3px;letter-spacing:1px;}
+.song-card .sdesc{font-size:11px;color:#c9c2e0;margin-top:2px;}
+#file-input{display:none;}
+.hint{font-size:11px;color:#8d84ad;margin-top:6px;text-align:center;line-height:1.5;max-width:460px;padding:0 10px;}
+.key-badge{display:inline-block;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);
+  border-radius:5px;padding:1px 6px;margin:0 2px;font-family:'Orbitron';font-size:10px;}
+
+/* ---------- SETUP (custom song BPM tap) ---------- */
+#setup-screen{gap:14px;width:min(94vw,440px);padding:10px;}
+.setup-box{width:100%;padding:18px 16px;border:1px solid rgba(255,255,255,.15);border-radius:12px;
+  background:rgba(20,8,38,.85);display:flex;flex-direction:column;gap:12px;align-items:center;}
+.bpm-display{font-family:'Orbitron';font-size:38px;color:var(--cyan);text-shadow:0 0 16px rgba(0,240,255,.6);}
+.tap-btn{font-family:'Orbitron';font-size:14px;letter-spacing:1px;padding:14px 20px;border-radius:10px;
+  border:2px solid var(--magenta);background:rgba(255,45,149,.15);color:var(--white);cursor:pointer;transition:.1s;width:100%;}
+.tap-btn:active{transform:scale(.98);background:rgba(255,45,149,.4);}
+.go-btn{font-family:'Orbitron';font-size:14px;letter-spacing:1px;padding:12px 20px;border-radius:8px;
+  border:2px solid var(--gold);background:rgba(255,210,63,.12);color:var(--gold);cursor:pointer;margin-top:4px;width:100%;}
+.go-btn:disabled{opacity:.35;cursor:default;}
+.diff-row{display:flex;gap:8px;width:100%;margin-top:2px;}
+.diff-btn{flex:1;padding:10px 0;border-radius:8px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(255,255,255,.04);color:#cbc4e6;font-family:'Orbitron';font-size:11px;letter-spacing:1px;cursor:pointer;}
+.diff-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(255,210,63,.12);}
+.small-row{font-size:11px;color:#a89ecb;text-align:center;}
+
+/* ---------- YOUTUBE ---------- */
+.tab-row{display:flex;gap:6px;width:100%;margin-bottom:2px;}
+.tab-btn{flex:1;padding:8px 0;border-radius:8px;border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.04);color:#cbc4e6;font-family:'Orbitron';font-size:10px;letter-spacing:0.5px;cursor:pointer;}
+.tab-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(0,240,255,.1);}
+.yt-input{width:100%;padding:10px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.18);
+  background:rgba(0,0,0,.35);color:var(--white);font-family:'Rajdhani';font-size:13px;outline:none;}
+.yt-input:focus{border-color:var(--cyan);}
+.yt-row{display:flex;gap:8px;width:100%;}
+.yt-go{padding:0 14px;border-radius:8px;border:2px solid var(--cyan);background:rgba(0,240,255,.12);
+  color:var(--cyan);font-family:'Orbitron';font-size:11px;cursor:pointer;white-space:nowrap;}
+.yt-results{width:100%;max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;}
+.bpm-web-box{width:100%;padding:8px 10px;border:1px solid rgba(255,210,63,.18);border-radius:8px;background:rgba(255,210,63,.04);display:none;flex-direction:column;gap:6px;}
+.bpm-web-title{font-size:10px;color:var(--gold);letter-spacing:.5px;}
+.bpm-candidates{display:flex;flex-wrap:wrap;gap:6px;}
+.bpm-candidate{padding:5px 8px;border-radius:6px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);color:#ddd7f2;font-family:'Orbitron';font-size:10px;cursor:pointer;}
+.bpm-candidate.active{border-color:var(--gold);color:var(--gold);background:rgba(255,210,63,.12);}
+.yt-result-item{display:flex;gap:8px;padding:8px;border:1px solid rgba(255,255,255,.1);border-radius:8px;
+  cursor:pointer;background:rgba(255,255,255,.03);align-items:center;transition:.1s;}
+.yt-result-item:hover{border-color:var(--magenta);background:rgba(255,45,149,.08);}
+.yt-result-item img{width:60px;height:35px;object-fit:cover;border-radius:4px;flex-shrink:0;}
+.yt-result-item .rtitle{font-size:12px;line-height:1.2;}
+.yt-result-item .rchannel{font-size:10px;color:#9a90bd;margin-top:2px;}
+.back-link{font-size:12px;color:#8d84ad;cursor:pointer;text-decoration:underline;margin-top:2px;}
+
+#yt-player-wrap{position:fixed;inset:0;z-index:1;overflow:hidden;background:#000;
+  display:none;pointer-events:none;}
+#yt-player-wrap.show{display:block;}
+#yt-player-wrap::after{content:'';position:absolute;inset:0;background:rgba(6,2,12,.58);pointer-events:none;}
+#yt-player-wrap .yt-label{position:absolute;top:calc(8px + env(safe-area-inset-top));right:10px;font-size:9px;background:rgba(0,0,0,.5);
+  padding:2px 7px;border-radius:3px;color:var(--cyan);font-family:'Orbitron';letter-spacing:1px;z-index:2;pointer-events:none;}
+#yt-player{width:100%;height:100%;pointer-events:none;}
+.screen{z-index:2;}
+
+/* ---------- GAME (모바일 맞춤 레이아웃) ---------- */
+#game-screen{padding:0;}
+#topbar{position:absolute;top:0;left:0;right:0;
+  padding-top: max(10px, env(safe-area-inset-top));
+  padding-left: 14px; padding-right: 14px; padding-bottom: 6px;
+  display:flex; flex-direction:column; gap:4px; z-index:10;
+  background:linear-gradient(180deg,rgba(8,2,15,.95) 60%,rgba(8,2,15,0));}
+
+.top-main-row{display:flex; align-items:center; justify-content:space-between; width:100%; gap:8px;}
+#songname{font-family:'Orbitron';font-size:12px;color:var(--white);letter-spacing:0.5px;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:55%;}
+#score{font-family:'Orbitron';font-size:18px;color:var(--gold);text-shadow:0 0 10px rgba(255,210,63,.5);}
+
+#game-controls{display:flex; gap:6px; align-items:center;}
+#pause-btn, #game-menu-btn{font-family:'Orbitron',sans-serif; font-weight:700; font-size:10px; letter-spacing:0.5px;
+  padding:5px 8px; border-radius:6px; cursor:pointer;}
+#pause-btn{background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.25); color:#cbc4e6;}
+#game-menu-btn{color:#ffd7eb; background:rgba(8,5,20,.82); border:1px solid rgba(255,45,149,.7);}
+
+#hp-wrap{width:100%; height:4px; background:rgba(255,255,255,.1); border-radius:2px; overflow:hidden; margin-top:2px;}
+#hp-bar{height:100%; width:100%; background:linear-gradient(90deg,var(--magenta),var(--gold),var(--cyan));
+  transition:width .15s; box-shadow:0 0 8px rgba(0,240,255,.6);}
+
+#field{position:absolute;top:0;left:0;right:0;bottom:0;touch-action:none;}
+canvas{position:absolute;top:0;left:0;width:100%;height:100%;}
+
+/* 모바일 손가락 가림 방지를 위해 콤보 및 판정 위치 상향 조정 */
+#combo-wrap{position:absolute;left:50%;top:22%;transform:translate(-50%,-50%);text-align:center;
+  pointer-events:none;z-index:4;}
+#combo-num{font-family:'Orbitron';font-weight:900;font-size:0;color:var(--white);
+  text-shadow:0 0 20px currentColor;transition:font-size .08s;}
+#combo-label{font-size:11px;letter-spacing:4px;color:#c9c2e0;opacity:0;margin-top:2px;}
+
+#judgetext{position:absolute;left:50%;top:32%;transform:translate(-50%,-50%);
+  font-family:'Orbitron';font-weight:900;font-size:0;letter-spacing:2px;pointer-events:none;z-index:4;
+  text-shadow:0 0 16px currentColor;}
+
+
+/* ---------- RESULTS ---------- */
+#result-screen{gap:8px; padding:20px 10px;}
+.grade{font-family:'Orbitron';font-weight:900;font-size:90px;line-height:1;
+  background:linear-gradient(180deg,var(--gold),#fff8dd);-webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 0 26px rgba(255,210,63,.6));}
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 20px;width:min(90vw,360px);margin-top:4px;}
+.stat-row{display:flex;justify-content:space-between;font-size:13px;border-bottom:1px dashed rgba(255,255,255,.12);padding-bottom:3px;}
+.stat-row b{font-family:'Orbitron';font-size:13px;}
+.stat-row.perfect b{color:var(--great);}
+.stat-row.great b{color:var(--cyan);}
+.stat-row.good b{color:var(--gold);}
+.stat-row.miss b{color:var(--miss);}
+.result-btns{display:flex;gap:10px;margin-top:16px;}
+.rbtn{font-family:'Orbitron';font-size:12px;letter-spacing:1px;padding:10px 18px;border-radius:8px;
+  border:2px solid var(--cyan);background:rgba(0,240,255,.1);color:var(--white);cursor:pointer;}
+
+/* lane key labels */
+.keycaps{position:absolute;bottom:0;left:0;right:0;display:flex;justify-content:center;z-index:3;pointer-events:none;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- TITLE -->
+  <div class="screen active" id="title-screen">
+    <div class="subtitle">6 KEY NEON RHYTHM</div>
+    <div class="logo">K-POP<br>BEAT ARCADE</div>
+    <div class="song-list" id="song-list"></div>
+    <input type="file" id="file-input" accept="audio/*">
+    <div class="hint">
+      키 배치&nbsp;
+      <span class="key-badge">D</span><span class="key-badge">F</span>
+      <span class="key-badge">J</span><span class="key-badge">K</span>
+      &nbsp;· 터치 또는 키보드로 플레이 가능 · 긴 막대는 길게 누르기
+    </div>
+  </div>
+
+  <!-- SETUP (for custom uploaded song: tap tempo) -->
+  <div class="screen" id="setup-screen">
+    <div class="subtitle" style="color:var(--gold)">내 노래 설정</div>
+    <div class="setup-box">
+      <div id="setup-filename" style="font-size:13px;color:#cbc4e6;word-break:break-all;text-align:center;"></div>
+      <div id="bpm-detect-status" class="small-row" style="color:var(--cyan);display:none;">🔍 자동 분석 중...</div>
+      <div class="bpm-web-box" id="bpm-web-box"><div class="bpm-web-title">🌐 웹에서 찾은 BPM — 하나를 선택하세요</div><div class="bpm-candidates" id="bpm-candidates"></div></div>
+      <div class="bpm-display" id="bpm-display">--- BPM</div>
+      <button class="tap-btn" id="tap-btn">TAP 눌러서 템포 맞추기</button>
+      <div class="small-row">노래의 박자에 맞춰 4번 이상 연속으로 탭하세요</div>
+       <div class="small-row" style="width:100%;display:flex;align-items:center;gap:6px;">
+         <span style="white-space:nowrap;color:var(--gold);font-size:11px;">보정</span>
+         <input id="beat-offset" type="range" min="-500" max="500" step="10" value="0" style="flex:1;">
+         <span id="beat-offset-label" style="width:50px;text-align:right;font-size:11px;">0 ms</span>
+       </div>
+      <div class="diff-row" id="diff-row">
+        <button class="diff-btn" data-density="1">쉬움</button>
+        <button class="diff-btn active" data-density="1.5">보통</button>
+        <button class="diff-btn" data-density="2">어려움</button>
+      </div>
+      <button class="go-btn" id="go-btn" disabled>이 템포로 시작 ▶</button>
+    </div>
+    <div class="hint">템포를 잘 모르겠으면 비트에 맞춰 두드리기만 해도 충분해요.</div>
+  </div>
+
+  <!-- YOUTUBE -->
+  <div class="screen" id="yt-screen">
+    <div class="subtitle" style="color:var(--magenta)">유튜브에서 곡 가져오기</div>
+    <div class="setup-box" style="max-width:460px;">
+      <div class="tab-row">
+        <button class="tab-btn active" id="tab-preset-btn">인기 프리셋</button>
+        <button class="tab-btn" id="tab-search-btn">노래 검색</button>
+        <button class="tab-btn" id="tab-link-btn">링크 붙여넣기</button>
+      </div>
+
+      <div id="yt-preset-pane" style="width:100%;display:flex;flex-direction:column;gap:8px;">
+        <div class="yt-row">
+          <input class="yt-input" id="yt-preset-apikey" type="password" placeholder="YouTube Data API 키 (최초 1회 입력)">
+          <button class="yt-go" id="yt-refresh-presets">오늘 순위</button>
+        </div>
+        <div id="yt-preset-status" class="small-row" style="color:var(--cyan);">오늘의 한국 음악 인기순위 50곡을 불러오는 중...</div>
+        <div class="yt-results" id="yt-preset-list"></div>
+      </div>
+
+      <div id="yt-search-pane" style="width:100%;display:none;flex-direction:column;gap:8px;">
+        <input class="yt-input" id="yt-apikey" type="password" placeholder="YouTube Data API 키 (최초 1회 입력)">
+        <div class="yt-row">
+          <input class="yt-input" id="yt-query" type="text" placeholder="노래 제목이나 아티스트 검색...">
+          <button class="yt-go" id="yt-search-btn">검색</button>
+        </div>
+        <div class="yt-results" id="yt-results"></div>
+      </div>
+
+      <div id="yt-link-pane" style="width:100%;display:none;flex-direction:column;gap:10px;">
+        <input class="yt-input" id="yt-url" type="text" placeholder="https://www.youtube.com/watch?v=...">
+        <button class="go-btn" id="yt-link-load-btn" style="width:100%;">불러오기 ▶</button>
+      </div>
+
+      <div class="back-link" id="yt-back-link">← 메뉴로 돌아가기</div>
+    </div>
+    <div class="hint">YouTube Data API 키 입력 시 인기순위 50곡이 자동 갱신됩니다.</div>
+  </div>
+
+  <!-- GAME (모바일 상단 레이아웃 반영) -->
+  <div class="screen" id="game-screen">
+    <div id="topbar">
+      <div class="top-main-row">
+        <div id="songname">---</div>
+        <div id="score">0</div>
+        <div id="game-controls">
+          <button id="pause-btn">⏸</button>
+          <button id="game-menu-btn">↩ 메뉴</button>
+        </div>
+      </div>
+      <div id="hp-wrap"><div id="hp-bar"></div></div>
+    </div>
+    <div id="field">
+      <canvas id="fx-canvas"></canvas>
+      <canvas id="game-canvas"></canvas>
+    </div>
+    <div id="combo-wrap">
+      <div id="combo-num">0</div>
+      <div id="combo-label">COMBO</div>
+    </div>
+    <div id="judgetext"></div>
+  </div>
+
+  <!-- RESULT -->
+  <div class="screen" id="result-screen">
+    <div class="grade" id="grade-el">S</div>
+    <div style="font-family:'Orbitron';font-size:14px;letter-spacing:2px;color:var(--white);margin-bottom:4px;text-align:center;" id="result-song"></div>
+    <div class="stat-grid">
+      <div class="stat-row perfect"><span>PERFECT</span><b id="st-perfect">0</b></div>
+      <div class="stat-row great"><span>GREAT</span><b id="st-great">0</b></div>
+      <div class="stat-row good"><span>GOOD</span><b id="st-good">0</b></div>
+      <div class="stat-row miss"><span>MISS</span><b id="st-miss">0</b></div>
+      <div class="stat-row"><span>MAX COMBO</span><b id="st-combo">0</b></div>
+      <div class="stat-row"><span>SCORE</span><b id="st-score">0</b></div>
+    </div>
+    <div class="result-btns">
+      <button class="rbtn" id="retry-btn">다시하기</button>
+      <button class="rbtn" id="menu-btn" style="border-color:var(--magenta);background:rgba(255,45,149,.1);">메뉴로</button>
+    </div>
+  </div>
+
+  <div id="yt-player-wrap"><span class="yt-label">▶ YouTube</span><div id="yt-player"></div></div>
+
+</div>
+
+<script>
+(() => {
+"use strict";
+
+/* ============================================================
+   AUDIO SYNTH ENGINE — builds two full K-pop-style demo tracks
+   ============================================================ */
+let actx = null;
+function ensureCtx(){ if(!actx) actx = new (window.AudioContext||window.webkitAudioContext)(); return actx; }
+
+// simple noise buffer for snare/hihat
+function makeNoiseBuffer(ctx, dur){
+  const buf = ctx.createBuffer(1, ctx.sampleRate*dur, ctx.sampleRate);
+  const d = buf.getChannelData(0);
+  for(let i=0;i<d.length;i++) d[i] = (Math.random()*2-1) * (1 - i/d.length);
+  return buf;
+}
+
+function scheduleKick(ctx, dest, t){
+  const o = ctx.createOscillator();
+  const g = ctx.createGain();
+  o.type='sine';
+  o.frequency.setValueAtTime(150, t);
+  o.frequency.exponentialRampToValueAtTime(45, t+0.13);
+  g.gain.setValueAtTime(0.9, t);
+  g.gain.exponentialRampToValueAtTime(0.001, t+0.22);
+  o.connect(g); g.connect(dest);
+  o.start(t); o.stop(t+0.24);
+}
+function scheduleSnare(ctx, dest, t, noiseBuf){
+  const n = ctx.createBufferSource(); n.buffer = noiseBuf;
+  const nf = ctx.createBiquadFilter(); nf.type='highpass'; nf.frequency.value=1200;
+  const ng = ctx.createGain(); ng.gain.setValueAtTime(0.55,t); ng.gain.exponentialRampToValueAtTime(0.001,t+0.16);
+  n.connect(nf); nf.connect(ng); ng.connect(dest); n.start(t); n.stop(t+0.18);
+  const o = ctx.createOscillator(); o.type='triangle'; o.frequency.setValueAtTime(190,t);
+  const og = ctx.createGain(); og.gain.setValueAtTime(0.35,t); og.gain.exponentialRampToValueAtTime(0.001,t+0.12);
+  o.connect(og); og.connect(dest); o.start(t); o.stop(t+0.13);
+}
+function scheduleHat(ctx, dest, t, noiseBuf, open){
+  const n = ctx.createBufferSource(); n.buffer = noiseBuf;
+  const f = ctx.createBiquadFilter(); f.type='highpass'; f.frequency.value=7000;
+  const g = ctx.createGain();
+  const dur = open?0.14:0.045;
+  g.gain.setValueAtTime(0.28,t); g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+  n.connect(f); f.connect(g); g.connect(dest); n.start(t); n.stop(t+dur+0.02);
+}
+function scheduleStab(ctx, dest, t, freq, dur){
+  const o1 = ctx.createOscillator(); o1.type='sawtooth'; o1.frequency.value=freq;
+  const o2 = ctx.createOscillator(); o2.type='square'; o2.frequency.value=freq*2.006;
+  const f = ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.setValueAtTime(3200,t);
+  f.frequency.exponentialRampToValueAtTime(500,t+dur);
+  const g = ctx.createGain(); g.gain.setValueAtTime(0.0001,t);
+  g.gain.linearRampToValueAtTime(0.22,t+0.02);
+  g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+  o1.connect(f); o2.connect(f); f.connect(g);
+  o1.start(t); o1.stop(t+dur+0.05); o2.start(t); o2.stop(t+dur+0.05);
+}
+function scheduleBass(ctx, dest, t, freq, dur){
+  const o = ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq;
+  const f = ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=420;
+  const g = ctx.createGain(); g.gain.setValueAtTime(0.001,t);
+  g.gain.linearRampToValueAtTime(0.5,t+0.015);
+  g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+  o.connect(f); f.connect(g); g.connect(dest);
+  o.start(t); o.stop(t+dur+0.05);
+}
+
+// Builds { audioEvents:[{t,fn}], notes:[{t,lane}], duration }
+function buildTrack(spec){
+  const beat = 60/spec.bpm;
+  const step = beat/4; // 16th note
+  const bars = spec.bars;
+  const stepsPerBar = 16;
+  const totalSteps = bars*stepsPerBar;
+  const audioEvents = [];
+  const notes = [];
+  const scale = spec.scale; // array of freqs for stabs
+  const bassScale = spec.bassScale;
+  let scaleIdx = 0, bassIdx = 0;
+
+  for(let s=0;s<totalSteps;s++){
+    const t = s*step;
+    const barStep = s % stepsPerBar;
+    const bar = Math.floor(s/stepsPerBar);
+
+    // KICK audio: four on the floor every beat
+    if(barStep%4===0){
+      audioEvents.push({t, fn:(ctx,dest,tt)=>scheduleKick(ctx,dest,tt)});
+      if(barStep===0 || barStep===8){
+        notes.push({t, lane: (bar%2===0)?1:2});
+      }
+    }
+    if(spec.energetic && barStep===14 && bar%4===3){
+      audioEvents.push({t, fn:(ctx,dest,tt)=>scheduleKick(ctx,dest,tt)});
+    }
+
+    // SNARE / CLAP on 2 & 4
+    if(barStep===4 || barStep===12){
+      audioEvents.push({t, fn:(ctx,dest,tt)=>scheduleSnare(ctx,dest,tt,spec.noiseBuf)});
+      notes.push({t, lane: (barStep===4)?0:3});
+    }
+
+    // HIHAT
+    if(barStep%2===0){
+      const open = (barStep===6 && bar%2===1);
+      audioEvents.push({t, fn:(ctx,dest,tt)=>scheduleHat(ctx,dest,tt,spec.noiseBuf,open)});
+    } else if(spec.energetic && Math.random()<0.3){
+      audioEvents.push({t, fn:(ctx,dest,tt)=>scheduleHat(ctx,dest,tt,spec.noiseBuf,false)});
+    }
+
+    // SYNTH STAB
+    if((barStep===2||barStep===10) && bar%2===0){
+      const freq = scale[scaleIdx % scale.length]; scaleIdx++;
+      audioEvents.push({t, fn:(ctx,dest,tt)=>scheduleStab(ctx,dest,tt,freq,step*1.8)});
+    }
+
+    // BASS
+    if(barStep===0 || barStep===8){
+      const freq = bassScale[bassIdx % bassScale.length]; bassIdx++;
+      audioEvents.push({t, fn:(ctx,dest,tt)=>scheduleBass(ctx,dest,tt,freq,beat*0.9)});
+    }
+  }
+
+  notes.sort((a,b)=>a.t-b.t);
+  const cleaned = [];
+  const lastTimeForLane = {};
+  for(const n of notes){
+    const lt = lastTimeForLane[n.lane] ?? -999;
+    if(n.t - lt < step*0.9) continue;
+    lastTimeForLane[n.lane] = n.t;
+    cleaned.push(n);
+  }
+
+  return { audioEvents, notes: cleaned, duration: totalSteps*step + 2 };
+}
+
+function demoTrackSpecs(ctx){
+  const noiseBuf = makeNoiseBuffer(ctx, 0.3);
+  return {
+    neon: {
+      name:"NEON PULSE",
+      meta:"128 BPM · SYNTH POP",
+      desc:"밝고 통통 튀는 신스팝 데모 트랙",
+      bpm:128, bars:24, energetic:true, noiseBuf,
+      scale:[523.25,587.33,659.25,783.99,880.00,659.25,587.33,523.25],
+      bassScale:[130.81,146.83,164.81,196.00]
+    },
+    midnight: {
+      name:"MIDNIGHT DRIVE",
+      meta:"100 BPM · MOODY R&B",
+      desc:"미디엄 템포, 그루비한 무드 트랙",
+      bpm:100, bars:20, energetic:false, noiseBuf,
+      scale:[440.00,493.88,523.25,587.33,659.25,587.33,523.25,493.88],
+      bassScale:[110.00,123.47,130.81,146.83]
+    }
+  };
+}
+
+/* ============================================================
+   GAME STATE
+   ============================================================ */
+const LANES = 4;
+const LANE_KEYS = ['D','F','J','K'];
+const LANE_COLORS = ['#00f0ff','#ff2d95','#ffd23f','#8b5cf6'];
+const KEYMAP = {'KeyD':0,'KeyF':1,'KeyJ':2,'KeyK':3};
+
+const TRAVEL_MS = 1850;
+const HOLD_TICK_MS = 100;
+const WINDOW_PERFECT = 75;
+const WINDOW_GREAT = 150;
+const WINDOW_GOOD = 230;
+const HP_DRAIN_MISS = 3;
+const HP_GAIN_HIT = 2.0;
+
+let state = {
+  mode:null,
+  spec:null,
+  notes:[],
+  audioEvents:[],
+  duration:0,
+  audioBuffer:null,
+  startTime:0,
+  running:false,
+  paused:false,
+  pauseOffset:0,
+  score:0, combo:0, maxCombo:0,
+  judgeCounts:{PERFECT:0,GREAT:0,GOOD:0,MISS:0},
+  hp:100,
+  activeSources:[],
+  laneFlash:[0,0,0,0],
+  particles:[],
+  songName:'',
+  shakeMag:0,
+  flashColor:null, flashAlpha:0,
+  rings:[],
+  bgPulse:0, bgPulseColor:'#00f0ff',
+  comboPopText:null, comboPopLife:0,
+  heldLanes:[false,false,false,false]
+};
+
+/* ============================================================
+   DOM refs & Mobile Optimized Sizing
+   ============================================================ */
+const $ = (id)=>document.getElementById(id);
+const screens = {
+  title: $('title-screen'), setup: $('setup-screen'), yt: $('yt-screen'), game: $('game-screen'), result: $('result-screen')
+};
+function showScreen(name){
+  Object.values(screens).forEach(s=>s.classList.remove('active'));
+  screens[name].classList.add('active');
+}
+
+const gameCanvas = $('game-canvas');
+const fxCanvas = $('fx-canvas');
+let gctx, fctx, W, H;
+function resizeCanvases(){
+  const rect = $('field').getBoundingClientRect();
+  W = rect.width; H = rect.height;
+  [gameCanvas, fxCanvas].forEach(c=>{
+    c.width = W * devicePixelRatio; c.height = H * devicePixelRatio;
+  });
+  gctx = gameCanvas.getContext('2d'); gctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+  fctx = fxCanvas.getContext('2d'); fctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+}
+window.addEventListener('resize', resizeCanvases);
+
+/* 모바일 화면 특성을 고려한 레인 여백 계산 */
+function laneMargin(){
+  if(W < 360) return 4;
+  if(W < 480) return 10;
+  if(W < 700) return W*0.05;
+  return W*0.12;
+}
+function laneX(i){
+  const margin = laneMargin();
+  const usable = W - margin*2;
+  return margin + usable*(i+0.5)/LANES;
+}
+
+// 모바일 하단 터치 편의성을 고려해 판정선 위치 조절
+const JUDGE_Y_RATIO = 0.82;
+
+/* build title list */
+function buildSongList(){
+  const list = $('song-list');
+  list.innerHTML='';
+  const cards = [
+    {key:'neon', title:'NEON PULSE', meta:'128 BPM · SYNTH POP', desc:'밝고 통통 튀는 신스팝 데모 트랙'},
+    {key:'midnight', title:'MIDNIGHT DRIVE', meta:'100 BPM · MOODY R&B', desc:'미디엄 템포, 그루비한 무드 트랙'},
+    {key:'youtube', title:'▶ 유튜브에서 재생', meta:'검색 또는 링크', desc:'유튜브 플레이어로 원하는 곡 플레이'},
+    {key:'custom', title:'+ 내 노래 파일 불러오기', meta:'MP3 / WAV', desc:'음원 파일 선택 후 템포 맞춰 플레이'}
+  ];
+  cards.forEach(c=>{
+    const div = document.createElement('div');
+    div.className='song-card';
+    div.innerHTML = `<div class="stitle">${c.title}</div><div class="smeta">${c.meta}</div><div class="sdesc">${c.desc}</div>`;
+    div.onclick = ()=>{
+      if(c.key==='custom'){ $('file-input').click(); }
+      else if(c.key==='youtube'){ showScreen('yt'); }
+      else { startDemoTrack(c.key); }
+    };
+    list.appendChild(div);
+  });
+}
+buildSongList();
+
+$('file-input').addEventListener('change', (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  loadCustomFile(f);
+});
+
+/* ============================================================
+   CUSTOM SONG: load + tap tempo
+   ============================================================ */
+let customFile = null, customArrayBuffer=null, customDecoded=null;
+let tapTimes = [];
+
+function loadCustomFile(file){
+  customFile = file;
+  $('setup-filename').textContent = '🎵 ' + file.name;
+  $('bpm-display').textContent = '--- BPM';
+  $('bpm-detect-status').style.display='none';
+  $('go-btn').disabled = true;
+  tapTimes = [];
+  showScreen('setup');
+  const reader = new FileReader();
+  reader.onload = (e)=>{
+    customArrayBuffer = e.target.result;
+    const ctx = ensureCtx();
+    $('bpm-detect-status').style.display='block';
+    $('bpm-detect-status').textContent = '🔍 자동 분석 중...';
+    ctx.decodeAudioData(customArrayBuffer.slice(0), (buf)=>{
+      customDecoded = buf;
+      try{
+        const detected = detectBPM(buf);
+        if(detected){
+          tappedBpm = detected;
+          $('bpm-display').textContent = detected+' BPM';
+          $('bpm-detect-status').textContent = '✅ 자동 감지: '+detected+' BPM';
+          $('go-btn').disabled = false;
+        } else {
+          $('bpm-detect-status').textContent = '자동 감지 실패 — TAP으로 맞춰주세요';
+        }
+      }catch(err){
+        $('bpm-detect-status').textContent = '자동 감지 실패 — TAP으로 맞춰주세요';
+      }
+    }, (err)=>{ alert('오디오 파일을 읽지 못했어요.'); showScreen('title'); });
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function detectBPM(buf){
+  const sr = buf.sampleRate;
+  const data = buf.getChannelData(0);
+  const hop = Math.round(sr*0.02);
+  const frameCount = Math.floor(data.length/hop);
+  if(frameCount < 100) return null;
+  const energy = new Float32Array(frameCount);
+  for(let i=0;i<frameCount;i++){
+    let sum=0;
+    const start=i*hop, end=Math.min(start+hop, data.length);
+    for(let j=start;j<end;j++){ const v=data[j]; sum += v*v; }
+    energy[i] = Math.sqrt(sum/(end-start));
+  }
+  const onset = new Float32Array(frameCount);
+  for(let i=1;i<frameCount;i++){ onset[i] = Math.max(0, energy[i]-energy[i-1]); }
+  const hopSec = hop/sr;
+  let bestLag=0, bestScore=-1;
+  const minLag = Math.round((60/180)/hopSec);
+  const maxLag = Math.round((60/70)/hopSec);
+  for(let lag=minLag; lag<=maxLag; lag++){
+    let score=0;
+    for(let i=0;i+lag<frameCount;i++) score += onset[i]*onset[i+lag];
+    if(score>bestScore){ bestScore=score; bestLag=lag; }
+  }
+  if(bestLag<=0) return null;
+  let bpm = Math.round(60/(bestLag*hopSec));
+  while(bpm<80) bpm*=2;
+  while(bpm>190) bpm=Math.round(bpm/2);
+  return bpm;
+}
+
+let tappedBpm = 120;
+let chartDensity = 1.5;
+let beatOffsetMs = 0;
+state.beatOffsetSec = 0;
+document.querySelectorAll('.diff-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.diff-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    chartDensity = parseFloat(btn.dataset.density);
+  });
+});
+$('beat-offset').addEventListener('input',()=>{
+  beatOffsetMs=Number($('beat-offset').value)||0;
+  state.beatOffsetSec=beatOffsetMs/1000;
+  $('beat-offset-label').textContent=(beatOffsetMs>0?'+':'')+beatOffsetMs+' ms';
+});
+$('tap-btn').addEventListener('click', ()=>{
+  const now = performance.now();
+  tapTimes.push(now);
+  if(tapTimes.length>8) tapTimes.shift();
+  if(tapTimes.length>=2){
+    const intervals=[];
+    for(let i=1;i<tapTimes.length;i++) intervals.push(tapTimes[i]-tapTimes[i-1]);
+    const avg = intervals.reduce((a,b)=>a+b,0)/intervals.length;
+    tappedBpm = Math.round(60000/avg);
+    if(tappedBpm>240) tappedBpm = Math.round(tappedBpm/2);
+    if(tappedBpm<60) tappedBpm = Math.round(tappedBpm*2);
+    $('bpm-display').textContent = tappedBpm+' BPM';
+    $('bpm-detect-status').style.display='none';
+    $('go-btn').disabled = (tapTimes.length<4);
+  }
+  $('bpm-display').style.transform='scale(1.15)';
+  setTimeout(()=>{$('bpm-display').style.transform='scale(1)';},90);
+});
+
+$('go-btn').addEventListener('click', ()=>{
+  if(state.mode==='youtube'){
+    if(!ytPlayer){ alert('영상을 불러오는 중이에요.'); return; }
+    startYoutubeTrack();
+  } else {
+    if(!customDecoded){ alert('오디오 디코딩 중이에요.'); return; }
+    startCustomTrack();
+  }
+});
+
+function buildChartOnly(bpm, durationSec, density, offsetSec=0){
+  density=density||1;
+  bpm=Math.max(60,Math.min(220,Number(bpm)||120));
+  const beat=60/bpm;
+  const eighth=beat/2;
+  const totalSteps=Math.floor(Math.max(0,durationSec-offsetSec)/eighth);
+  const notes=[], lastTimeForLane={}; let lastHoldEnd=-999;
+  for(let s=0;s<totalSteps;s++){
+    const t=offsetSec+s*eighth;
+    const beatSlot=s%2;
+    const beatInBar=Math.floor((s*eighth/beat)%4);
+    const bar=Math.floor((s*eighth)/(beat*4));
+    let lane=null;
+    if(beatSlot===0){
+      lane=(beatInBar===0||beatInBar===2) ? ((bar%2===0)?1:2) : (beatInBar===1?0:3);
+    } else if(density>1){
+      lane=(s+bar)%4;
+      if(density<2 && ((s+bar)%2===1)) lane=null;
+    }
+    if(lane===null) continue;
+    const lt=lastTimeForLane[lane]??-999;
+    if(t-lt<eighth*.9) continue;
+    let duration=0;
+    const canHold=t>lastHoldEnd+beat*1.5 && beatSlot===0 && (beatInBar===0||beatInBar===2);
+    if(canHold && density>=1.5){
+      duration=beat;
+      if(t+duration>durationSec-beat*.25) duration=0;
+      else lastHoldEnd=t+duration;
+    }
+    lastTimeForLane[lane]=t;
+    notes.push({t,lane,type:duration>0?'hold':'tap',duration});
+  }
+  return notes;
+}
+
+/* ============================================================
+   YOUTUBE INTEGRATION
+   ============================================================ */
+let ytApiReady = false;
+let ytPlayer = null;
+let ytVideoId = null;
+let ytClockInterval = null;
+
+function loadYouTubeIframeAPI(){
+  if(window.YT && window.YT.Player){ ytApiReady = true; return; }
+  if(document.getElementById('yt-iframe-api-script')) return;
+  const tag = document.createElement('script');
+  tag.id='yt-iframe-api-script';
+  tag.src = 'https://www.youtube.com/iframe_api';
+  document.body.appendChild(tag);
+}
+window.onYouTubeIframeAPIReady = function(){ ytApiReady = true; };
+loadYouTubeIframeAPI();
+
+function extractYouTubeId(url){
+  if(!url) return null;
+  const patterns = [
+    /(?:youtube\.com\/watch\?v=)([\w-]{11})/,
+    /(?:youtu\.be\/)([\w-]{11})/,
+    /(?:youtube\.com\/embed\/)([\w-]{11})/,
+    /(?:youtube\.com\/shorts\/)([\w-]{11})/
+  ];
+  for(const p of patterns){ const m = url.match(p); if(m) return m[1]; }
+  if(/^[\w-]{11}$/.test(url.trim())) return url.trim();
+  return null;
+}
+function escapeHtml(s){ const d=document.createElement('div'); d.textContent=s; return d.innerHTML; }
+
+$('tab-preset-btn').addEventListener('click', ()=>{
+  $('tab-preset-btn').classList.add('active'); $('tab-search-btn').classList.remove('active'); $('tab-link-btn').classList.remove('active');
+  $('yt-preset-pane').style.display='flex'; $('yt-search-pane').style.display='none'; $('yt-link-pane').style.display='none';
+});
+$('tab-search-btn').addEventListener('click', ()=>{
+  $('tab-search-btn').classList.add('active'); $('tab-preset-btn').classList.remove('active'); $('tab-link-btn').classList.remove('active');
+  $('yt-search-pane').style.display='flex'; $('yt-preset-pane').style.display='none'; $('yt-link-pane').style.display='none';
+});
+$('tab-link-btn').addEventListener('click', ()=>{
+  $('tab-link-btn').classList.add('active'); $('tab-preset-btn').classList.remove('active'); $('tab-search-btn').classList.remove('active');
+  $('yt-link-pane').style.display='flex'; $('yt-preset-pane').style.display='none'; $('yt-search-pane').style.display='none';
+});
+
+const PRESET_SONGS = [
+  {title:"BiiiG", artist:"BIGBANG", id:"L8ZnXgbyUuc", query:"BiiiG BIGBANG"},
+  {title:"Less than a Lover", artist:"JENNIE", id:"vR49dHUwMUA", query:"Less than a Lover JENNIE"},
+  {title:"LOVE ATTACK", artist:"RESCENE", id:"ihynud9fao4", query:"LOVE ATTACK RESCENE"},
+  {title:"갑자기 (Suddenly)", artist:"I.O.I", id:"Jxgbfc89hNI", query:"갑자기 (Suddenly) I.O.I"},
+  {title:"REDRED", artist:"CORTIS", id:"U6BDbXIah-Y", query:"REDRED CORTIS"},
+  {title:"LEMONADE", artist:"aespa", id:"83C3TZ4Zm_o", query:"LEMONADE aespa"},
+  {title:"It's Me", artist:"ILLIT", id:"bMhDJ0S0OBA", query:"It's Me ILLIT"},
+  {title:"BAD", artist:"ATEEZ", id:"-q_S27LbNKU", query:"BAD ATEEZ"},
+  {title:"Drowning", artist:"WOODZ", id:"EdwIL005jtw", query:"Drowning WOODZ"},
+  {title:"Catch Catch", artist:"YENA", id:"NOiyDlWl534", query:"Catch Catch YENA"},
+  {title:"RUDE!", artist:"Hearts2Hearts", id:"F7sGJVUrkjQ", query:"RUDE! Hearts2Hearts"},
+  {title:"HOME SWEET HOME", artist:"G-DRAGON", id:"fLi0EJfi_vg", query:"HOME SWEET HOME G-DRAGON"},
+  {title:"SWIM", artist:"BTS", id:"b4iVv91Z6lY", query:"SWIM BTS"},
+  {title:"404 (New Era)", artist:"KiiiKiii", id:"zhHB4dZTChw", query:"404 (New Era) KiiiKiii"},
+  {title:"Good Goodbye", artist:"HWASA", id:"Qe8fa4b5xNU", query:"Good Goodbye HWASA"},
+  {title:"Supernova", artist:"aespa", id:null, query:"Supernova aespa"},
+  {title:"Armageddon", artist:"aespa", id:null, query:"Armageddon aespa"},
+  {title:"Whiplash", artist:"aespa", id:null, query:"Whiplash aespa"},
+  {title:"Magnetic", artist:"ILLIT", id:null, query:"Magnetic ILLIT"},
+  {title:"EASY", artist:"LE SSERAFIM", id:null, query:"EASY LE SSERAFIM"},
+  {title:"ANTIFRAGILE", artist:"LE SSERAFIM", id:null, query:"ANTIFRAGILE LE SSERAFIM"},
+  {title:"HEYA", artist:"IVE", id:null, query:"HEYA IVE"},
+  {title:"LOVE DIVE", artist:"IVE", id:null, query:"LOVE DIVE IVE"},
+  {title:"I AM", artist:"IVE", id:null, query:"I AM IVE"},
+  {title:"Super Shy", artist:"NewJeans", id:null, query:"Super Shy NewJeans"},
+  {title:"OMG", artist:"NewJeans", id:null, query:"OMG NewJeans"},
+  {title:"Ditto", artist:"NewJeans", id:null, query:"Ditto NewJeans"},
+  {title:"Hype Boy", artist:"NewJeans", id:null, query:"Hype Boy NewJeans"},
+  {title:"How You Like That", artist:"BLACKPINK", id:null, query:"How You Like That BLACKPINK"},
+  {title:"Dynamite", artist:"BTS", id:null, query:"Dynamite BTS"},
+  {title:"Butter", artist:"BTS", id:null, query:"Butter BTS"},
+  {title:"Seven", artist:"Jung Kook", id:null, query:"Seven Jung Kook"},
+  {title:"APT.", artist:"ROSÉ & Bruno Mars", id:null, query:"APT. ROSÉ Bruno Mars"},
+  {title:"MANIAC", artist:"Stray Kids", id:null, query:"MANIAC Stray Kids"},
+  {title:"God's Menu", artist:"Stray Kids", id:null, query:"God's Menu Stray Kids"}
+];
+
+function getStoredApiKey(){ return (localStorage.getItem('kpopBeatArcadeYoutubeKey')||'').trim(); }
+function saveApiKey(key){ key=(key||'').trim(); if(key) localStorage.setItem('kpopBeatArcadeYoutubeKey',key); }
+function syncApiKeyInputs(){
+  const key=getStoredApiKey();
+  if($('yt-apikey') && !$('yt-apikey').value) $('yt-apikey').value=key;
+  if($('yt-preset-apikey') && !$('yt-preset-apikey').value) $('yt-preset-apikey').value=key;
+}
+function todayKey(){
+  const d=new Date();
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function renderPresetList(){
+  const list=$('yt-preset-list');
+  list.innerHTML='';
+  PRESET_SONGS.slice(0,50).forEach((s,i)=>{
+    const div=document.createElement('div');
+    div.className='yt-result-item';
+    const rank=i+1;
+    const thumb=s.id ? `https://i.ytimg.com/vi/${s.id}/default.jpg` : '';
+    div.innerHTML=`${thumb?`<img src="${thumb}">`:`<div style="width:60px;height:35px;border-radius:4px;background:rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;color:var(--gold);font-family:Orbitron;font-size:11px;">#${rank}</div>`}
+      <div style="min-width:0;flex:1"><div class="rtitle"><span style="color:var(--gold);font-family:Orbitron;margin-right:5px;">#${rank}</span>${escapeHtml(s.title)}</div>
+      <div class="rchannel">${escapeHtml(s.artist)}</div></div>`;
+    div.onclick=async()=>{
+      const key=getStoredApiKey();
+      if(s.id){ selectYoutubeVideo(s.id,{title:s.title,artist:s.artist}); return; }
+      if(!key){
+        $('yt-preset-status').textContent='API 키가 필요합니다.';
+        $('yt-preset-apikey').focus();
+        return;
+      }
+      try{
+        $('yt-preset-status').textContent='선택한 곡의 영상을 찾는 중...';
+        const url=`https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1&q=${encodeURIComponent(s.query)}&key=${encodeURIComponent(key)}`;
+        const res=await fetch(url); const data=await res.json();
+        if(data.error) throw new Error(data.error.message||'YouTube API 오류');
+        const item=(data.items||[])[0];
+        if(!item) throw new Error('영상을 찾지 못했습니다.');
+        s.id=item.id.videoId;
+        selectYoutubeVideo(s.id,{title:s.title,artist:s.artist});
+      }catch(err){
+        $('yt-preset-status').textContent='곡 연결 실패: '+String(err.message||err);
+      }
+    };
+    list.appendChild(div);
+  });
+}
+
+async function refreshDailyPresets(force=false){
+  const key=($('yt-preset-apikey').value||getStoredApiKey()).trim();
+  if(key) saveApiKey(key);
+  const status=$('yt-preset-status');
+  const cacheKey='kpopBeatArcadeDailyKRMusic50';
+  const cachedDate=localStorage.getItem(cacheKey+'_date');
+  const cached=localStorage.getItem(cacheKey+'_data');
+  if(!force && cachedDate===todayKey() && cached){
+    try{
+      const arr=JSON.parse(cached);
+      if(Array.isArray(arr) && arr.length>0){
+        PRESET_SONGS.splice(0,PRESET_SONGS.length,...arr);
+        renderPresetList();
+        status.textContent=`오늘 순위 업데이트 완료 · ${todayKey()}`;
+        return;
+      }
+    }catch(e){}
+  }
+  if(!key){
+    renderPresetList();
+    status.textContent='기본 목록을 표시합니다.';
+    return;
+  }
+  status.textContent='오늘의 한국 음악 인기순위 50곡 조회 중...';
+  try{
+    const url=`https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails&chart=mostPopular&regionCode=KR&videoCategoryId=10&maxResults=50&key=${encodeURIComponent(key)}`;
+    const res=await fetch(url); const data=await res.json();
+    if(data.error) throw new Error(data.error.message||'YouTube API 오류');
+    const arr=(data.items||[]).map((it,i)=>({
+      title:it.snippet?.title||`YouTube Music #${i+1}`,
+      artist:it.snippet?.channelTitle||'YouTube Music',
+      id:it.id,
+      query:(it.snippet?.title||'')+' '+(it.snippet?.channelTitle||''),
+      rank:i+1
+    }));
+    if(arr.length>0){
+      PRESET_SONGS.splice(0,PRESET_SONGS.length,...arr);
+      localStorage.setItem(cacheKey+'_date',todayKey());
+      localStorage.setItem(cacheKey+'_data',JSON.stringify(PRESET_SONGS));
+    }
+    renderPresetList();
+    status.textContent=`오늘 순위 업데이트 완료 · ${todayKey()}`;
+  }catch(err){
+    renderPresetList();
+    status.textContent='기본 프리셋을 표시합니다.';
+  }
+}
+
+renderPresetList();
+syncApiKeyInputs();
+refreshDailyPresets(false);
+$('yt-preset-apikey').addEventListener('change',()=>{
+  saveApiKey($('yt-preset-apikey').value);
+  syncApiKeyInputs();
+});
+$('yt-refresh-presets').addEventListener('click',()=>refreshDailyPresets(true));
+$('yt-back-link').addEventListener('click', ()=> showScreen('title'));
+$('yt-search-btn').addEventListener('click', doYtSearch);
+$('yt-query').addEventListener('keydown', (e)=>{ if(e.key==='Enter') doYtSearch(); });
+
+async function doYtSearch(){
+  const key = ($('yt-apikey').value||getStoredApiKey()).trim();
+  saveApiKey(key);
+  if($('yt-preset-apikey')) $('yt-preset-apikey').value=key;
+  const q = ($('yt-query').value||'').trim();
+  if(!key){ alert('YouTube Data API 키를 입력해주세요.'); return; }
+  if(!q){ $('yt-results').innerHTML = '<div class="small-row" style="color:var(--gold)">검색어를 입력해주세요.</div>'; $('yt-query').focus(); return; }
+  const results = $('yt-results');
+  results.innerHTML = '<div class="small-row">검색 중...</div>';
+  try{
+    const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=8&q=${encodeURIComponent(q)}&key=${encodeURIComponent(key)}`;
+    const res = await fetch(url);
+    const data = await res.json();
+    if(data.error){ results.innerHTML = `<div class="small-row" style="color:var(--miss)">오류: ${escapeHtml(data.error.message)}</div>`; return; }
+    const items = data.items||[];
+    if(items.length===0){ results.innerHTML = '<div class="small-row">검색 결과가 없어요.</div>'; return; }
+    results.innerHTML='';
+    items.forEach(it=>{
+      const div = document.createElement('div');
+      div.className='yt-result-item';
+      const thumb = (it.snippet.thumbnails && it.snippet.thumbnails.default) ? it.snippet.thumbnails.default.url : '';
+      div.innerHTML = `<img src="${thumb}"><div><div class="rtitle">${escapeHtml(it.snippet.title)}</div><div class="rchannel">${escapeHtml(it.snippet.channelTitle)}</div></div>`;
+      div.onclick = ()=> selectYoutubeVideo(it.id.videoId,{title:it.snippet.title,artist:it.snippet.channelTitle});
+      results.appendChild(div);
+    });
+  }catch(err){
+    results.innerHTML = `<div class="small-row" style="color:var(--miss)">검색 요청에 실패했어요.</div>`;
+  }
+}
+
+$('yt-link-load-btn').addEventListener('click', ()=>{
+  const id = extractYouTubeId($('yt-url').value);
+  if(!id){ alert('유효한 유튜브 링크가 아니에요.'); return; }
+  selectYoutubeVideo(id,{title:'YouTube 트랙',artist:''});
+});
+
+let ytSelectedTitle='', ytSelectedArtist='';
+function parseBpmFromText(text){
+  const out=[], re=/\b([6-9]\d|1\d{2}|200)\s*(?:BPM|beats?\s*per\s*minute)\b/gi; let m;
+  while((m=re.exec(text||''))) out.push(Number(m[1])); return out;
+}
+function setBpmCandidates(values){
+  const vals=[...new Set(values.map(Number).filter(v=>v>=60&&v<=200))].slice(0,8);
+  const box=$('bpm-web-box'), wrap=$('bpm-candidates'); wrap.innerHTML='';
+  if(!vals.length){box.style.display='none';return;}
+  vals.forEach((bpm,i)=>{const b=document.createElement('button');b.className='bpm-candidate'+(i?'':' active');b.textContent=bpm+' BPM';
+    b.onclick=()=>{document.querySelectorAll('.bpm-candidate').forEach(x=>x.classList.remove('active'));b.classList.add('active');tappedBpm=bpm;$('bpm-display').textContent=bpm+' BPM';$('go-btn').disabled=false;};
+    wrap.appendChild(b);});
+  box.style.display='flex';tappedBpm=vals[0];$('bpm-display').textContent=tappedBpm+' BPM';$('go-btn').disabled=false;
+}
+async function lookupWebBpm(title,artist){
+  const q=encodeURIComponent('"'+title+'" "'+artist+'" BPM');
+  const urls=['https://r.jina.ai/https://www.google.com/search?q='+q];
+  const found=[...parseBpmFromText(title)];
+  for(const url of urls){try{const res=await fetch(url);if(res.ok)found.push(...parseBpmFromText(await res.text()));if(found.length>=6)break;}catch(e){}}
+  if(found.length){setBpmCandidates(found);$('bpm-detect-status').style.display='block';$('bpm-detect-status').textContent='🌐 웹 검색 BPM 선택';}
+  else{$('bpm-web-box').style.display='none';tappedBpm=120;$('bpm-display').textContent='120 BPM';$('go-btn').disabled=false;$('bpm-detect-status').style.display='block';$('bpm-detect-status').textContent='🌐 기본 120 BPM 설정 (TAP으로 수정 가능)';}
+}
+
+function selectYoutubeVideo(videoId,meta={}){
+  ytVideoId=videoId;ytSelectedTitle=meta.title||'YouTube 트랙';ytSelectedArtist=meta.artist||'';
+  $('yt-player-wrap').classList.add('show');
+  createOrLoadYtPlayer(videoId,()=>{
+    customFile={name:ytSelectedTitle};$('setup-filename').textContent='🎬 '+ytSelectedTitle+(ytSelectedArtist?' · '+ytSelectedArtist:'');
+    $('bpm-display').textContent='120 BPM';tappedBpm=120;tapTimes=[];$('bpm-web-box').style.display='none';
+    beatOffsetMs=0;state.beatOffsetSec=0;$('beat-offset').value=0;$('beat-offset-label').textContent='0 ms';
+    $('bpm-detect-status').style.display='block';$('bpm-detect-status').textContent='🌐 BPM 검색 중...';
+    $('go-btn').disabled=false;state.mode='youtube';showScreen('setup');lookupWebBpm(ytSelectedTitle,ytSelectedArtist);
+  });
+}
+
+function createOrLoadYtPlayer(videoId, onReady){
+  const tryInit = ()=>{
+    if(!ytApiReady || !window.YT || !window.YT.Player){ setTimeout(tryInit, 150); return; }
+    if(ytPlayer){
+      ytPlayer.loadVideoById(videoId);
+      setTimeout(()=>{ try{ytPlayer.pauseVideo();}catch(e){} onReady && onReady(); }, 400);
+      return;
+    }
+    ytPlayer = new YT.Player('yt-player', {
+      videoId: videoId,
+      width:'100%', height:'100%',
+      playerVars:{ controls:0, modestbranding:1, rel:0, playsinline:1, disablekb:1, iv_load_policy:3 },
+      events:{
+        onReady: ()=>{ try{ytPlayer.pauseVideo();}catch(e){} onReady && onReady(); },
+        onError: ()=>{ alert('이 영상은 불러올 수 없어요.'); showScreen('yt'); }
+      }
+    });
+  };
+  tryInit();
+}
+
+function startYtClockPolling(){
+  stopYtClockPolling();
+  ytClockInterval = setInterval(()=>{
+    if(state.mode==='youtube' && ytPlayer && state.running && !state.paused){
+      try{ state.ytClock = { lastTime: ytPlayer.getCurrentTime(), lastPoll: performance.now() }; }catch(e){}
+    }
+  }, 100);
+}
+function stopYtClockPolling(){ if(ytClockInterval){ clearInterval(ytClockInterval); ytClockInterval=null; } }
+
+function startYoutubeTrack(){
+  const dur = (ytPlayer && ytPlayer.getDuration()) || 180;
+  const notes = buildChartOnly(tappedBpm, dur-1, chartDensity, Number(state.beatOffsetSec||0));
+  state.mode='youtube';
+  state.spec=null;
+  state.notes = notes.map(n=>({...n, hit:false, missed:false}));
+  state.audioEvents=[];
+  state.duration=dur;
+  state.songName=ytSelectedTitle||'YouTube 트랙';
+  state.audioBuffer=null;
+  launchGame();
+}
+
+/* ============================================================
+   START FUNCTIONS
+   ============================================================ */
+function startDemoTrack(key){
+  const ctx = ensureCtx();
+  if(ctx.state==='suspended') ctx.resume();
+  const specs = demoTrackSpecs(ctx);
+  const spec = specs[key];
+  const built = buildTrack(spec);
+  state.mode='demo';
+  state.spec=spec;
+  state.demoKey=key;
+  state.notes = built.notes.map(n=>({...n, hit:false, missed:false}));
+  state.audioEvents = built.audioEvents;
+  state.duration = built.duration;
+  state.songName = spec.name;
+  state.audioBuffer = null;
+  launchGame();
+}
+
+function startCustomTrack(){
+  const ctx = ensureCtx();
+  if(ctx.state==='suspended') ctx.resume();
+  const dur = customDecoded.duration;
+  const notes = buildChartOnly(tappedBpm, dur-0.5, chartDensity);
+  state.mode='custom';
+  state.spec=null;
+  state.notes = notes.map(n=>({...n, hit:false, missed:false}));
+  state.audioEvents = [];
+  state.duration = dur;
+  state.songName = customFile.name.replace(/\.[^/.]+$/,'');
+  state.audioBuffer = customDecoded;
+  launchGame();
+}
+
+/* ============================================================
+   LAUNCH / RESET
+   ============================================================ */
+function resetRunState(){
+  state.score=0; state.combo=0; state.maxCombo=0;
+  state.judgeCounts={PERFECT:0,GREAT:0,GOOD:0,MISS:0};
+  state.hp=100;
+  state.laneFlash=[0,0,0,0];
+  state.particles=[];
+  state.shakeMag=0; state.flashColor=null; state.flashAlpha=0; state.rings=[];
+  state.bgPulse=0; state.comboPopText=null; state.comboPopLife=0; state.heldLanes=[false,false,false,false];
+  state.notes.forEach(n=>{n.hit=false; n.missed=false; n.holdStarted=false; n.holdCompleted=false; n.holdBroken=false;});
+  state.activeSources.forEach(s=>{try{s.stop();}catch(e){}});
+  state.activeSources=[];
+}
+
+function launchGame(){
+  resetRunState();
+  $('songname').textContent = state.songName;
+  $('score').textContent='0';
+  $('hp-bar').style.width='100%';
+  showScreen('game');
+  resizeCanvases();
+  requestAnimationFrame(resizeCanvases);
+  state.running = true;
+  state.paused = false;
+
+  if(state.mode==='youtube'){
+    $('yt-player-wrap').classList.add('show');
+    state.ytClock = { lastTime:0, lastPoll: performance.now() };
+    try{ ytPlayer.seekTo(0, true); ytPlayer.playVideo(); }catch(e){}
+    startYtClockPolling();
+  } else {
+    const ctx = ensureCtx();
+    const startAt = ctx.currentTime + 0.6;
+    state.startTime = startAt;
+    if(state.mode==='demo'){
+      const gain = ctx.createGain(); gain.gain.value=0.9; gain.connect(ctx.destination);
+      state.audioEvents.forEach(ev=>{ ev.fn(ctx, gain, startAt+ev.t); });
+      state.masterGain = gain;
+    } else {
+      const src = ctx.createBufferSource();
+      src.buffer = state.audioBuffer;
+      const gain = ctx.createGain(); gain.gain.value=1.0;
+      src.connect(gain); gain.connect(ctx.destination);
+      src.start(startAt);
+      state.activeSources.push(src);
+      state.masterGain = gain;
+    }
+  }
+
+  if(state.mode==='youtube') requestAnimationFrame(loop);
+  else { const delayMs=Math.max(0,(state.startTime-ensureCtx().currentTime)*1000); setTimeout(()=>requestAnimationFrame(loop),delayMs); }
+}
+
+function songTimeMs(){
+  if(state.mode==='youtube'){
+    if(!state.ytClock) return 0;
+    return (state.ytClock.lastTime*1000) + (performance.now()-state.ytClock.lastPoll);
+  }
+  const ctx = ensureCtx();
+  return (ctx.currentTime - state.startTime)*1000;
+}
+
+/* ============================================================
+   INPUT & TOUCH EVENTS
+   ============================================================ */
+window.addEventListener('keydown',e=>{if(e.repeat)return;if(screens.game.classList.contains('active')&&!state.paused&&KEYMAP.hasOwnProperty(e.code)){state.heldLanes[KEYMAP[e.code]]=true;hitLane(KEYMAP[e.code]);}if(e.code==='Escape'&&screens.game.classList.contains('active'))togglePause();});
+window.addEventListener('keyup',e=>{if(KEYMAP.hasOwnProperty(e.code))releaseLane(KEYMAP[e.code]);});
+
+const field=$('field'),touchLanes=new Map();
+field.addEventListener('touchstart',e=>{
+  if(!screens.game.classList.contains('active')||state.paused)return;
+  e.preventDefault();
+  const rect=field.getBoundingClientRect(), margin=laneMargin(), usable=W-margin*2;
+  for(const t of e.changedTouches){
+    let lane=Math.floor((t.clientX-rect.left-margin)/(usable/LANES));
+    lane=Math.max(0,Math.min(LANES-1,lane));
+    touchLanes.set(t.identifier,lane);
+    state.heldLanes[lane]=true;
+    hitLane(lane);
+  }
+}, {passive:false});
+
+field.addEventListener('touchend',e=>{
+  for(const t of e.changedTouches){
+    const l=touchLanes.get(t.identifier);
+    if(l!==undefined){releaseLane(l);touchLanes.delete(t.identifier);}
+  }
+},{passive:false});
+
+field.addEventListener('touchcancel',e=>{
+  for(const t of e.changedTouches){
+    const l=touchLanes.get(t.identifier);
+    if(l!==undefined){releaseLane(l);touchLanes.delete(t.identifier);}
+  }
+},{passive:false});
+
+function releaseLane(lane){
+  state.heldLanes[lane]=false;
+  const t=songTimeMs();
+  for(const n of state.notes){
+    if(n.type==='hold'&&n.holdStarted&&!n.holdCompleted&&!n.holdBroken&&n.lane===lane&&t>=n.t*1000&&t<(n.t+n.duration)*1000){
+      n.holdBroken=true;n.missed=true;state.combo=0;state.hp=Math.max(0,state.hp-HP_DRAIN_MISS);showJudgeText('MISS');updateHUD();
+    }
+  }
+}
+
+function hitLane(lane){
+  state.laneFlash[lane]=1;
+  const t=songTimeMs();
+  let best=null,bestDelta=Infinity;
+  for(const n of state.notes){
+    if(n.lane!==lane||n.hit||n.missed||n.holdStarted)continue;
+    const d=Math.abs(n.t*1000-t);
+    if(d<bestDelta){bestDelta=d;best=n;}
+  }
+  if(best&&bestDelta<=WINDOW_GOOD){
+    best.hit=true;
+    const judge=bestDelta<=WINDOW_PERFECT?'PERFECT':bestDelta<=WINDOW_GREAT?'GREAT':'GOOD';
+    if(best.type==='hold'){best.holdStarted=true;best.holdStartTime=t;}
+    applyJudge(judge,lane);
+  } else {
+    spawnParticles(laneX(lane),H*JUDGE_Y_RATIO,LANE_COLORS[lane],4);
+  }
+}
+
+function applyJudge(judge, lane){
+  state.judgeCounts[judge]++;
+  const hitX = laneX(lane), hitY = H*JUDGE_Y_RATIO;
+  if(judge==='MISS'){
+    state.combo=0;
+    state.hp = Math.max(0, state.hp-HP_DRAIN_MISS);
+    triggerShake(6);
+    triggerFlash('#ff4757', 0.3);
+    spawnRing(hitX, hitY, '#ff4757', 1.2);
+  } else {
+    state.combo++;
+    state.maxCombo = Math.max(state.maxCombo, state.combo);
+    state.hp = Math.min(100, state.hp+HP_GAIN_HIT);
+    const base = judge==='PERFECT'?300:judge==='GREAT'?180:90;
+    state.score += base + state.combo*2;
+    const color = LANE_COLORS[lane];
+    const pCount = judge==='PERFECT'?20:judge==='GREAT'?12:6;
+    spawnParticles(hitX, hitY, color, pCount, judge==='PERFECT');
+    spawnRing(hitX, hitY, color, judge==='PERFECT'?1.1:0.8);
+    state.bgPulse = judge==='PERFECT'?0.4:0.25;
+    state.bgPulseColor = color;
+    if(judge==='PERFECT') triggerShake(2);
+
+    if(state.combo>0 && state.combo%10===0){
+      const big = state.combo%50===0;
+      triggerShake(big?10:5);
+      triggerFlash(big?'#ffd23f':color, big?0.4:0.2);
+      for(let k=0;k<LANES;k++) spawnRing(laneX(k), hitY, big?'#ffd23f':color, big?1.4:0.9);
+      spawnParticles(W/2, H*0.3, big?'#ffd23f':color, big?45:25, true);
+      state.comboPopText = state.combo+' COMBO!';
+      state.comboPopLife = 1;
+    }
+  }
+  showJudgeText(judge);
+  updateHUD();
+  if(state.hp<=0){ endGame(true); }
+}
+
+function triggerShake(mag){ state.shakeMag = Math.max(state.shakeMag, mag); }
+function triggerFlash(color, alpha){ state.flashColor = color; state.flashAlpha = Math.max(state.flashAlpha, alpha); }
+function spawnRing(x,y,color,scale){ state.rings.push({x,y,r:6,maxR:50*scale,alpha:0.9,color}); }
+
+/* ============================================================
+   PARTICLES
+   ============================================================ */
+function spawnParticles(x,y,color,n,dramatic){
+  for(let i=0;i<n;i++){
+    const ang = Math.random()*Math.PI*2;
+    const spd = dramatic ? (3+Math.random()*7) : (1.5+Math.random()*4);
+    state.particles.push({
+      x,y, vx:Math.cos(ang)*spd, vy:Math.sin(ang)*spd - (dramatic?3:1.5),
+      life:1, color, size:(dramatic?2.5:1.8)+Math.random()*(dramatic?3:2),
+      spin: Math.random()*Math.PI*2, spinSpeed:(Math.random()-0.5)*0.4,
+      star: dramatic && Math.random()<0.4
+    });
+  }
+}
+
+/* ============================================================
+   HUD
+   ============================================================ */
+function updateHUD(){
+  $('score').textContent = state.score.toLocaleString();
+  $('hp-bar').style.width = state.hp+'%';
+  const comboEl = $('combo-num'), labelEl=$('combo-label');
+  if(state.combo>0){
+    comboEl.textContent = state.combo;
+    const size = Math.min(64, 32+state.combo*0.5);
+    comboEl.style.fontSize = size+'px';
+    comboEl.style.color = state.combo>=100?'var(--gold)':state.combo>=50?'var(--magenta)':'var(--cyan)';
+    labelEl.style.opacity = 0.8;
+    comboEl.style.transform='scale(1.2)';
+    requestAnimationFrame(()=>comboEl.style.transform='scale(1)');
+  } else {
+    comboEl.style.fontSize='0px';
+    labelEl.style.opacity=0;
+  }
+}
+
+let judgeTimeout=null;
+function showJudgeText(judge){
+  const el = $('judgetext');
+  const colors={PERFECT:'var(--great)',GREAT:'var(--cyan)',GOOD:'var(--gold)',MISS:'var(--miss)'};
+  el.textContent = judge;
+  el.style.color = colors[judge];
+  el.style.fontSize = judge==='PERFECT' ? '36px' : '28px';
+  el.style.opacity='1';
+  el.style.transition='none';
+  const rot = judge==='MISS' ? '-4deg' : (Math.random()<0.5?'-3deg':'3deg');
+  el.style.transform=`translate(-50%,-50%) scale(1.4) rotate(${rot})`;
+  clearTimeout(judgeTimeout);
+  requestAnimationFrame(()=>{
+    el.style.transition='opacity .35s, transform .35s cubic-bezier(.34,1.56,.64,1)';
+    el.style.transform='translate(-50%,-50%) scale(1) rotate(0deg)';
+  });
+  judgeTimeout=setTimeout(()=>{
+    el.style.transition='opacity .25s, transform .25s';
+    el.style.opacity='0';
+    el.style.transform='translate(-50%,-50%) scale(0.8) rotate(0deg)';
+  },240);
+}
+
+/* ============================================================
+   PAUSE
+   ============================================================ */
+$('pause-btn').addEventListener('click', togglePause);
+function togglePause(){
+  if(!state.paused){
+    state.paused=true;
+    if(state.mode==='youtube'){ try{ytPlayer.pauseVideo();}catch(e){} }
+    else { ensureCtx().suspend(); }
+    $('pause-btn').textContent='▶';
+  } else {
+    state.paused=false;
+    if(state.mode==='youtube'){
+      try{ytPlayer.playVideo();}catch(e){}
+      state.ytClock = { lastTime: state.ytClock ? state.ytClock.lastTime : 0, lastPoll: performance.now() };
+    } else { ensureCtx().resume(); }
+    $('pause-btn').textContent='⏸';
+    requestAnimationFrame(loop);
+  }
+}
+
+/* ============================================================
+   MAIN LOOP & RENDER
+   ============================================================ */
+function loop(){
+  if(!state.running) return;
+  if(state.paused) return;
+  const t = songTimeMs();
+
+  for(const n of state.notes){
+    if(n.type==='hold'){
+      if(!n.holdStarted&&!n.missed&&(n.t*1000+WINDOW_GOOD)<t){n.missed=true;applyJudge('MISS',n.lane);}
+      else if(n.holdStarted&&!n.holdCompleted&&!n.holdBroken){
+        const endMs=(n.t+n.duration)*1000;
+        if(!state.heldLanes[n.lane]){n.holdBroken=true;n.missed=true;state.combo=0;state.hp=Math.max(0,state.hp-HP_DRAIN_MISS);showJudgeText('MISS');updateHUD();}
+        else if(t>=endMs){n.holdCompleted=true;n.missed=true;state.combo++;state.maxCombo=Math.max(state.maxCombo,state.combo);state.hp=Math.min(100,state.hp+HP_GAIN_HIT);state.score+=Math.round(120+n.duration*80+state.combo*2);spawnParticles(laneX(n.lane),H*JUDGE_Y_RATIO,LANE_COLORS[n.lane],14,true);spawnRing(laneX(n.lane),H*JUDGE_Y_RATIO,LANE_COLORS[n.lane],1);showJudgeText('PERFECT');updateHUD();}
+      }
+    }else if(!n.hit&&!n.missed&&(n.t*1000+WINDOW_GOOD)<t){n.missed=true;applyJudge('MISS',n.lane);}
+  }
+
+  render(t);
+
+  if(t/1000 > state.duration + 1.5){
+    endGame(false);
+    return;
+  }
+  requestAnimationFrame(loop);
+}
+
+function render(t){
+  gctx.clearRect(0,0,W,H);
+  fctx.clearRect(0,0,W,H);
+  const judgeY = H*JUDGE_Y_RATIO;
+
+  let shakeX=0, shakeY=0;
+  if(state.shakeMag>0.05){
+    shakeX = (Math.random()-0.5)*state.shakeMag;
+    shakeY = (Math.random()-0.5)*state.shakeMag;
+    state.shakeMag *= 0.86;
+  } else state.shakeMag = 0;
+  gctx.save(); fctx.save();
+  gctx.translate(shakeX, shakeY); fctx.translate(shakeX, shakeY);
+
+  if(state.bgPulse>0.01){
+    const grad = fctx.createRadialGradient(W/2,H*0.4,0,W/2,H*0.4,Math.max(W,H)*0.7);
+    grad.addColorStop(0, hexA(state.bgPulseColor, state.bgPulse*0.35));
+    grad.addColorStop(1, hexA(state.bgPulseColor, 0));
+    fctx.fillStyle = grad;
+    fctx.fillRect(-40,-40,W+80,H+80);
+    state.bgPulse *= 0.9;
+  } else state.bgPulse = 0;
+
+  const margin = laneMargin(), usable=W-margin*2, laneW = usable/LANES;
+  for(let i=0;i<LANES;i++){
+    const x0 = margin+laneW*i;
+    const flash = state.laneFlash[i];
+    if(flash>0.01){
+      const grad = gctx.createLinearGradient(0,0,0,H);
+      grad.addColorStop(0, hexA(LANE_COLORS[i],0));
+      grad.addColorStop(1, hexA(LANE_COLORS[i],0.28*flash));
+      gctx.fillStyle=grad;
+      gctx.fillRect(x0,0,laneW,H);
+      state.laneFlash[i]*=0.88;
+    }
+    gctx.strokeStyle='rgba(255,255,255,0.06)';
+    gctx.beginPath(); gctx.moveTo(x0,0); gctx.lineTo(x0,H); gctx.stroke();
+  }
+  gctx.strokeStyle='rgba(255,255,255,0.06)';
+  gctx.beginPath(); gctx.moveTo(margin+usable,0); gctx.lineTo(margin+usable,H); gctx.stroke();
+
+  // judge line glow
+  const jg = gctx.createLinearGradient(margin,0,margin+usable,0);
+  jg.addColorStop(0,'rgba(0,240,255,0)'); jg.addColorStop(0.5,'rgba(0,240,255,0.9)'); jg.addColorStop(1,'rgba(255,45,149,0)');
+  gctx.fillStyle=jg;
+  gctx.fillRect(margin, judgeY-2, usable, 4);
+  gctx.save();
+  gctx.shadowColor='rgba(0,240,255,0.8)'; gctx.shadowBlur=12;
+  gctx.fillRect(margin, judgeY-2, usable, 4);
+  gctx.restore();
+
+  // key caps (터치 반응형 유닛)
+  const keyCapHeight = Math.min(48, Math.max(34, H * 0.07));
+  for(let i=0;i<LANES;i++){
+    const x = laneX(i);
+    gctx.save();
+    gctx.translate(x, judgeY + keyCapHeight/2 + 6);
+    gctx.fillStyle = state.laneFlash[i]>0.15 ? LANE_COLORS[i] : 'rgba(255,255,255,0.08)';
+    gctx.strokeStyle = LANE_COLORS[i];
+    gctx.lineWidth=1.5;
+    roundRect(gctx,-laneW*0.42, -keyCapHeight/2, laneW*0.84, keyCapHeight, 8);
+    gctx.fill(); gctx.stroke();
+    gctx.fillStyle = state.laneFlash[i]>0.15 ? '#0a0212' : '#cfc8ea';
+    gctx.font='700 14px Orbitron, sans-serif';
+    gctx.textAlign='center'; gctx.textBaseline='middle';
+    gctx.fillText(LANE_KEYS[i],0,1);
+    gctx.restore();
+  }
+
+  // notes
+  const noteWidth = laneW * 0.78;
+  for(const n of state.notes){
+    if(n.missed&&!n.holdStarted)continue;
+    const noteMs=n.t*1000,progress=1-(noteMs-t)/TRAVEL_MS;
+    if(progress<-.05||progress>1.15)continue;
+    const y=progress*judgeY,x=laneX(n.lane);
+    if(n.type==='hold'){
+      const tailY=(1-((n.t+n.duration)*1000-t)/TRAVEL_MS)*judgeY,top=Math.min(y,tailY),bottom=Math.max(y,tailY);
+      if(bottom>=0&&top<=judgeY){
+        gctx.save();gctx.globalAlpha=n.holdBroken?.35:.82;gctx.fillStyle=LANE_COLORS[n.lane];gctx.shadowColor=LANE_COLORS[n.lane];gctx.shadowBlur=10;
+        roundRect(gctx,x-noteWidth*0.35,top,noteWidth*0.7,Math.max(8,bottom-top),noteWidth*0.2);gctx.fill();gctx.restore();
+      }
+      if(!n.holdStarted){gctx.globalAlpha=1;drawNote(x,y,LANE_COLORS[n.lane],noteWidth,true);}
+    }else{
+      for(let tr=2;tr>=1;tr--){const ty=y-tr*8;if(ty<0)continue;gctx.globalAlpha=.12*(3-tr);drawNote(x,ty,LANE_COLORS[n.lane],noteWidth,false);}
+      gctx.globalAlpha=1;drawNote(x,y,LANE_COLORS[n.lane],noteWidth,true);
+    }
+  }
+
+  // expanding ring bursts
+  for(let i=state.rings.length-1;i>=0;i--){
+    const r = state.rings[i];
+    r.r += (r.maxR - r.r)*0.22 + 1.2;
+    r.alpha *= 0.88;
+    if(r.alpha<0.02 || r.r>=r.maxR-0.5){ state.rings.splice(i,1); continue; }
+    fctx.save();
+    fctx.globalAlpha = r.alpha;
+    fctx.strokeStyle = r.color;
+    fctx.lineWidth = 2.5;
+    fctx.shadowColor = r.color; fctx.shadowBlur = 10;
+    fctx.beginPath(); fctx.arc(r.x, r.y, r.r, 0, Math.PI*2); fctx.stroke();
+    fctx.restore();
+  }
+
+  // particles
+  fctx.save();
+  for(let i=state.particles.length-1;i>=0;i--){
+    const p = state.particles[i];
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.15; p.life-=0.026; p.spin+=p.spinSpeed;
+    if(p.life<=0){ state.particles.splice(i,1); continue; }
+    fctx.globalAlpha = Math.max(0,p.life);
+    fctx.fillStyle = p.color;
+    if(p.star){
+      fctx.save();
+      fctx.translate(p.x,p.y); fctx.rotate(p.spin);
+      fctx.shadowColor=p.color; fctx.shadowBlur=6;
+      drawStar(fctx, p.size*1.6);
+      fctx.restore();
+    } else {
+      fctx.beginPath(); fctx.arc(p.x,p.y,p.size,0,Math.PI*2); fctx.fill();
+    }
+  }
+  fctx.restore();
+
+  gctx.restore(); fctx.restore();
+
+  if(state.flashAlpha>0.01){
+    fctx.save();
+    fctx.globalAlpha = state.flashAlpha;
+    fctx.fillStyle = state.flashColor;
+    fctx.fillRect(0,0,W,H);
+    fctx.restore();
+    state.flashAlpha *= 0.82;
+  } else state.flashAlpha = 0;
+
+  if(state.hp < 25 && state.hp > 0){
+    const pulse = 0.16 + 0.12*Math.sin(t/140);
+    const vg = fctx.createRadialGradient(W/2,H/2,Math.max(W,H)*0.35,W/2,H/2,Math.max(W,H)*0.72);
+    vg.addColorStop(0,'rgba(255,20,40,0)');
+    vg.addColorStop(1, `rgba(255,20,40,${pulse})`);
+    fctx.fillStyle = vg;
+    fctx.fillRect(0,0,W,H);
+  }
+
+  if(state.comboPopLife>0.01){
+    fctx.save();
+    fctx.globalAlpha = Math.min(1, state.comboPopLife*1.4);
+    const scale = 1 + (1-state.comboPopLife)*0.4;
+    fctx.translate(W/2, H*0.22);
+    fctx.scale(scale, scale);
+    fctx.font='900 24px Orbitron, sans-serif';
+    fctx.textAlign='center'; fctx.textBaseline='middle';
+    fctx.shadowColor='#ffd23f'; fctx.shadowBlur=16;
+    fctx.fillStyle='#fff8dd';
+    fctx.fillText(state.comboPopText, 0, 0);
+    fctx.restore();
+    state.comboPopLife -= 0.02;
+  } else state.comboPopLife = 0;
+}
+
+function drawStar(ctx, size){
+  ctx.beginPath();
+  for(let i=0;i<4;i++){
+    const a = (Math.PI/2)*i;
+    ctx.lineTo(Math.cos(a)*size, Math.sin(a)*size);
+    ctx.lineTo(Math.cos(a+Math.PI/4)*size*0.35, Math.sin(a+Math.PI/4)*size*0.35);
+  }
+  ctx.closePath();
+  ctx.fill();
+}
+
+function drawNote(x,y,color,w,full){
+  gctx.save();
+  gctx.translate(x,y);
+  if(full!==false){
+    gctx.shadowColor=color; gctx.shadowBlur=12;
+  }
+  gctx.fillStyle=color;
+  roundRect(gctx,-w/2,-8,w,16,8);
+  gctx.fill();
+  if(full!==false){
+    gctx.shadowBlur=0;
+    gctx.fillStyle='rgba(255,255,255,0.55)';
+    roundRect(gctx,-w/2+3,-3,w-6,3,2);
+    gctx.fill();
+  }
+  gctx.restore();
+}
+
+function roundRect(ctx,x,y,w,h,r){
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.arcTo(x+w,y,x+w,y+h,r);
+  ctx.arcTo(x+w,y+h,x,y+h,r);
+  ctx.arcTo(x,y+h,x,y,r);
+  ctx.arcTo(x,y,x+w,y,r);
+  ctx.closePath();
+}
+
+function hexA(hex,a){
+  const v = hex.replace('#','');
+  const r=parseInt(v.substring(0,2),16), g=parseInt(v.substring(2,4),16), b=parseInt(v.substring(4,6),16);
+  return `rgba(${r},${g},${b},${a})`;
+}
+
+/* ============================================================
+   END GAME / RESULTS
+   ============================================================ */
+function endGame(failed){
+  state.running=false;
+  if(state.mode==='youtube'){
+    stopYtClockPolling();
+    try{ ytPlayer && ytPlayer.pauseVideo(); }catch(e){}
+  } else {
+    state.activeSources.forEach(s=>{try{s.stop();}catch(e){}});
+    if(state.masterGain){
+      try{ state.masterGain.gain.exponentialRampToValueAtTime(0.001, ensureCtx().currentTime+0.3);}catch(e){}
+    }
+  }
+  const jc = state.judgeCounts;
+  const total = jc.PERFECT+jc.GREAT+jc.GOOD+jc.MISS;
+  const acc = total? (jc.PERFECT + jc.GREAT*0.7 + jc.GOOD*0.4)/total : 0;
+  let grade='C';
+  if(failed) grade='F';
+  else if(jc.MISS===0 && jc.GOOD===0) grade='S';
+  else if(acc>0.9) grade='A';
+  else if(acc>0.75) grade='B';
+
+  $('grade-el').textContent = grade;
+  $('grade-el').style.background = failed?'linear-gradient(180deg,#ff4757,#8f0f1c)':'linear-gradient(180deg,var(--gold),#fff8dd)';
+  $('grade-el').style.webkitBackgroundClip='text'; $('grade-el').style.backgroundClip='text';
+  $('result-song').textContent = state.songName + (failed?' · FAILED':'');
+  $('st-perfect').textContent = jc.PERFECT;
+  $('st-great').textContent = jc.GREAT;
+  $('st-good').textContent = jc.GOOD;
+  $('st-miss').textContent = jc.MISS;
+  $('st-combo').textContent = state.maxCombo;
+  $('st-score').textContent = state.score.toLocaleString();
+
+  setTimeout(()=>showScreen('result'), 350);
+}
+
+$('game-menu-btn').addEventListener('click', ()=>{
+  state.running=false; state.paused=false;
+  if(state.mode==='youtube'){ stopYtClockPolling(); try{ ytPlayer && ytPlayer.pauseVideo(); }catch(e){} }
+  else { state.activeSources.forEach(s=>{try{s.stop();}catch(e){}}); state.activeSources=[]; }
+  $('yt-player-wrap').classList.remove('show');
+  $('pause-btn').textContent='⏸';
+  showScreen('title');
+});
+
+$('retry-btn').addEventListener('click', ()=>{
+  if(state.mode==='demo') startDemoTrack(state.demoKey);
+  else if(state.mode==='youtube') startYoutubeTrack();
+  else startCustomTrack();
+});
+$('menu-btn').addEventListener('click', ()=>{
+  state.running=false; state.paused=false;
+  if(state.mode==='youtube'){ stopYtClockPolling(); try{ ytPlayer && ytPlayer.pauseVideo(); }catch(e){} }
+  else { state.activeSources.forEach(s=>{try{s.stop();}catch(e){}}); state.activeSources=[]; }
+  $('yt-player-wrap').classList.remove('show');
+  $('pause-btn').textContent='⏸';
+  showScreen('title');
+});
+
+window.addEventListener('load', resizeCanvases);
+setTimeout(resizeCanvases, 50);
+
+})();
+</script>
+</body>
+</html>
