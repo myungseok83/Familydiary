@@ -178,11 +178,6 @@
     color:var(--gold); height:20px; text-shadow:0 0 10px rgba(255,215,107,0.8), 0 0 22px rgba(255,215,107,0.35);
     display:inline-block; transform-origin:right center;
   }
-  #combo-wrap.bump{ animation:combobump .3s ease-out; }
-  @keyframes combobump{
-    0%{ transform:scale(1.6); text-shadow:0 0 20px rgba(255,215,107,1), 0 0 34px rgba(255,215,107,0.6); }
-    100%{ transform:scale(1); text-shadow:0 0 10px rgba(255,215,107,0.8), 0 0 22px rgba(255,215,107,0.35); }
-  }
   .acc-wrap{font-size:10.5px; color:var(--dim); margin-top:2px;}
   #song-tag{
     position:absolute; top:14px; left:56px; z-index:5; font-size:11px; color:var(--dim); max-width:52%;
@@ -285,13 +280,6 @@
     0%,100%{ box-shadow:0 0 0 1px rgba(255,255,255,0.08), 0 8px 16px rgba(0,0,0,0.5), 0 0 18px var(--n-glow); }
     50%{ box-shadow:0 0 0 1px rgba(255,255,255,0.2), 0 8px 16px rgba(0,0,0,0.5), 0 0 30px var(--n-glow); }
   }
-  /* 탭한 순간 노트 자체가 반짝이는 피드백 (롱노트 헤드를 눌렀을 때, 홀드는 계속 유지되므로 파괴적이지 않게) */
-  .note.tap-flash{ animation:notetapflash .25s ease-out; }
-  @keyframes notetapflash{
-    0%{ filter:brightness(1); }
-    30%{ filter:brightness(2.2); }
-    100%{ filter:brightness(1); }
-  }
   /* 일반 노트를 탭해서 제거될 때: 아쿠아빛으로 밝아지며 히트라인 쪽으로 빨려들어가듯 사라짐 */
   .note.note-hit{
     animation:notedrain .22s cubic-bezier(.5,0,.85,.4) forwards;
@@ -333,13 +321,7 @@
   }
   .judge-pop{
     font-size:25px; font-weight:900; letter-spacing:1px;
-    font-style:italic;
-    animation:judgepop .4s cubic-bezier(.2,1.4,.4,1) forwards;
-  }
-  @keyframes judgepop{
-    0%{opacity:0; transform:scale(0.5) rotate(-3deg);}
-    35%{opacity:1; transform:scale(1.18) rotate(1deg);}
-    100%{opacity:0; transform:scale(1) rotate(0deg);}
+    font-style:italic; opacity:0;
   }
   /* PERFECT / HOLD! 전용: 그라데이션 골드 텍스트 + 점점 커지며 사라지는 화려한 연출 */
   .judge-pop.big-judge{
@@ -348,13 +330,11 @@
     background-size:250% auto;
     -webkit-background-clip:text; background-clip:text; color:transparent;
     filter:drop-shadow(0 0 10px rgba(255,215,107,0.9)) drop-shadow(0 0 26px rgba(255,215,107,0.5));
-    animation:judgepopBig .62s cubic-bezier(.16,1.6,.3,1) forwards, shine 1.2s linear infinite;
+    animation:shine 1.2s linear infinite;
   }
-  @keyframes judgepopBig{
-    0%{opacity:0; transform:scale(0.35) rotate(-6deg);}
-    40%{opacity:1; transform:scale(1.5) rotate(3deg);}
-    65%{transform:scale(1.22) rotate(-1deg);}
-    100%{opacity:0; transform:scale(1.55) rotate(0deg);}
+  body.low-spec .judge-pop.big-judge{
+    animation:none;
+    filter:drop-shadow(0 0 10px rgba(255,215,107,0.8));
   }
   @keyframes shine{
     0%{background-position:0% center;}
@@ -363,12 +343,7 @@
   .judge-sub{
     margin-top:2px; font-size:14px; font-weight:800; letter-spacing:1px;
     color:var(--gold); text-shadow:0 0 10px rgba(255,215,107,0.75);
-    opacity:0; animation:judgesubpop .4s ease-out .1s forwards;
-  }
-  @keyframes judgesubpop{
-    0%{opacity:0; transform:translateY(-4px) scale(0.7);}
-    55%{opacity:1; transform:translateY(0) scale(1.08);}
-    100%{opacity:0; transform:translateY(4px) scale(1);}
+    opacity:0;
   }
   .lane-flash{
     position:absolute; inset:0; z-index:6; pointer-events:none;
@@ -494,13 +469,7 @@
   body.low-spec .note-glyph{ text-shadow:none; }
   body.low-spec .note-hold-tag.slide-tag{ animation:none; opacity:0.9; }
   body.low-spec .combo-milestone .rays{ display:none; }
-  body.low-spec .judge-pop.big-judge{
-    animation:judgepopBig .62s cubic-bezier(.16,1.6,.3,1) forwards; /* shine(무한 반복 배경위치 애니메이션) 생략 */
-    filter:drop-shadow(0 0 10px rgba(255,215,107,0.8)); /* 이중 drop-shadow 대신 하나만 */
-  }
   body.low-spec #combo-wrap{ text-shadow:0 0 6px rgba(255,215,107,0.6); }
-  body.low-spec #combo-wrap.bump{ animation:combobumplite .3s ease-out; }
-  @keyframes combobumplite{ 0%{ transform:scale(1.35); } 100%{ transform:scale(1); } }
 </style>
 </head>
 <body>
@@ -988,6 +957,20 @@ async function startGame(){
   field.appendChild(hitLine);
   gameState.laneWidthPx = field.clientWidth / laneCount; // 이펙트에서 매번 getBoundingClientRect를 호출하지 않도록 한 번만 계산해둔다
 
+  // 판정 텍스트 표시 영역도 매 탭마다 새로 만들지 않고 하나만 만들어서 재사용한다 (탭 성공 시 버벅임의 주요 원인이었음)
+  const judgeWrap = document.createElement('div');
+  judgeWrap.className = 'judge-wrap';
+  judgeWrap.id = 'judge-display';
+  judgeWrap.style.display = 'none';
+  const judgeMain = document.createElement('div');
+  judgeMain.id = 'judge-main-text';
+  const judgeSub = document.createElement('div');
+  judgeSub.id = 'judge-sub-text';
+  judgeSub.className = 'judge-sub';
+  judgeWrap.appendChild(judgeMain);
+  judgeWrap.appendChild(judgeSub);
+  field.appendChild(judgeWrap);
+
   // 유튜브 플레이어 생성/교체 — 이전 플레이어가 있으면 완전히 destroy 후 컨테이너를 새로 만든다
   // (innerHTML만 비우면 이전 iframe이 target id를 그대로 물고 있어 재생성이 꼬임)
   if(ytPlayer && typeof ytPlayer.destroy === 'function'){
@@ -1332,16 +1315,25 @@ function handleLaneHit(laneIdx){
   // 히트 실패시(빈 탭)는 감점 없이 무시 — 캐주얼 판정
 }
 
+const TAP_FLASH_KEYFRAMES = [
+  { filter:'brightness(1)' },
+  { filter:'brightness(2.2)', offset:0.3 },
+  { filter:'brightness(1)' },
+];
+
 function flashNoteTap(note){
   const el = gameState.activeNoteEls.get(note);
   if(!el) return;
-  el.classList.remove('tap-flash');
-  void el.offsetWidth; // 리플로우 강제로 애니메이션 재시작
-  el.classList.add('tap-flash');
-  const glow = document.createElement('div');
-  glow.className = 'aqua-glow';
-  el.appendChild(glow);
-  setTimeout(() => glow.remove(), 280);
+  if(el.animate){
+    if(el.getAnimations){ el.getAnimations().forEach(a => a.cancel()); }
+    el.animate(TAP_FLASH_KEYFRAMES, { duration:250, easing:'ease-out' });
+  }
+  if(!lowSpecMode){
+    const glow = document.createElement('div');
+    glow.className = 'aqua-glow';
+    el.appendChild(glow);
+    setTimeout(() => glow.remove(), 280);
+  }
 }
 
 function hitAndRemoveNoteEl(note){
@@ -1349,14 +1341,17 @@ function hitAndRemoveNoteEl(note){
   if(!el){ return; }
   gameState.activeNoteEls.delete(note); // 더 이상 gameLoop가 위치를 갱신하지 않도록 맵에서 바로 제거
   el.style.setProperty('--tap-y', el.style.transform ? el.style.transform.replace(/translateY\(|\)/g, '') : '0px');
-  const glow = document.createElement('div');
-  glow.className = 'aqua-glow';
-  el.appendChild(glow);
+  if(!lowSpecMode){
+    const glow = document.createElement('div');
+    glow.className = 'aqua-glow';
+    el.appendChild(glow);
+  }
   el.classList.add('note-hit');
   setTimeout(() => el.remove(), 220);
 }
 
 function spawnLightBeam(laneIdx){
+  if(lowSpecMode) return;
   const laneEl = gameState.laneEls[laneIdx];
   if(!laneEl) return;
   const beam = document.createElement('div');
@@ -1436,38 +1431,71 @@ function registerMiss(){
   showJudge('MISS', '#ff6fb0');
 }
 
+const COMBO_BUMP_KEYFRAMES = [
+  { transform:'scale(1.6)', textShadow:'0 0 20px rgba(255,215,107,1), 0 0 34px rgba(255,215,107,0.6)' },
+  { transform:'scale(1)', textShadow:'0 0 10px rgba(255,215,107,0.8), 0 0 22px rgba(255,215,107,0.35)' },
+];
+
 function updateHud(){
   $('#score-val').textContent = gameState.score.toLocaleString();
   const comboEl = $('#combo-wrap');
   comboEl.textContent = gameState.combo > 1 ? gameState.combo + ' COMBO' : '';
-  if(gameState.combo > 1){
-    comboEl.classList.remove('bump');
-    void comboEl.offsetWidth; // 리플로우를 강제해서 애니메이션을 재시작한다
-    comboEl.classList.add('bump');
+  if(gameState.combo > 1 && comboEl.animate){
+    if(comboEl.getAnimations){ comboEl.getAnimations().forEach(a => a.cancel()); }
+    comboEl.animate(COMBO_BUMP_KEYFRAMES, { duration:300, easing:'ease-out', fill:'forwards' });
   }
   const acc = gameState.judgedCount ? (gameState.accSum / gameState.judgedCount * 100) : 100;
   $('#acc-wrap').textContent = 'ACC ' + acc.toFixed(1) + '%';
 }
 
+const JUDGE_KEYFRAMES_NORMAL = [
+  { opacity:0, transform:'scale(0.5) rotate(-3deg)' },
+  { opacity:1, transform:'scale(1.18) rotate(1deg)', offset:0.35 },
+  { opacity:0, transform:'scale(1) rotate(0deg)' },
+];
+const JUDGE_KEYFRAMES_BIG = [
+  { opacity:0, transform:'scale(0.35) rotate(-6deg)' },
+  { opacity:1, transform:'scale(1.5) rotate(3deg)', offset:0.4 },
+  { opacity:1, transform:'scale(1.22) rotate(-1deg)', offset:0.65 },
+  { opacity:0, transform:'scale(1.55) rotate(0deg)' },
+];
+const JUDGE_SUB_KEYFRAMES = [
+  { opacity:0, transform:'translateY(-4px) scale(0.7)' },
+  { opacity:1, transform:'translateY(0) scale(1.08)', offset:0.55 },
+  { opacity:0, transform:'translateY(4px) scale(1)' },
+];
+
 function showJudge(text, color, sub){
-  const wrap = document.createElement('div');
-  wrap.className = 'judge-wrap';
+  const main = $('#judge-main-text');
+  const subEl = $('#judge-sub-text');
+  if(!main || !subEl) return;
+  const isBig = (text === 'PERFECT' || text === 'HOLD!');
 
-  const main = document.createElement('div');
-  main.className = 'judge-pop' + ((text === 'PERFECT' || text === 'HOLD!') ? ' big-judge' : '');
   main.textContent = text;
-  if(text !== 'PERFECT' && text !== 'HOLD!'){ main.style.color = color; } // PERFECT/HOLD!는 그라데이션이라 별도 색 지정 안 함
-  wrap.appendChild(main);
-
-  if(sub){
-    const subEl = document.createElement('div');
-    subEl.className = 'judge-sub';
-    subEl.textContent = sub;
-    wrap.appendChild(subEl);
+  main.className = 'judge-pop' + (isBig ? ' big-judge' : '');
+  main.style.color = isBig ? '' : color; // PERFECT/HOLD!는 그라데이션이라 별도 색 지정 안 함
+  if(main.animate){
+    if(main.getAnimations){ main.getAnimations().forEach(a => a.cancel()); }
+    main.animate(isBig ? JUDGE_KEYFRAMES_BIG : JUDGE_KEYFRAMES_NORMAL, {
+      duration: isBig ? 620 : 400,
+      easing: isBig ? 'cubic-bezier(.16,1.6,.3,1)' : 'cubic-bezier(.2,1.4,.4,1)',
+      fill: 'forwards',
+    });
+  }else{
+    main.style.opacity = '1'; // Web Animations API 미지원 시 최소한 보이기라도 한다
   }
 
-  $('#lane-field').appendChild(wrap);
-  setTimeout(() => wrap.remove(), 620);
+  if(sub){
+    subEl.textContent = sub;
+    if(subEl.animate){
+      if(subEl.getAnimations){ subEl.getAnimations().forEach(a => a.cancel()); }
+      subEl.animate(JUDGE_SUB_KEYFRAMES, { duration:400, delay:100, easing:'ease-out', fill:'forwards' });
+    }else{
+      subEl.style.opacity = '1';
+    }
+  }else{
+    subEl.textContent = '';
+  }
 }
 
 function hexToRgba(hex, alpha){
@@ -1481,12 +1509,14 @@ function spawnBurst(laneIdx, color, big){
   if(!laneEl) return;
   const cx = (gameState.laneWidthPx || laneEl.clientWidth) / 2;
 
-  // 레인 전체가 짧게 밝아지는 플래시
-  const flash = document.createElement('div');
-  flash.className = 'lane-flash';
-  flash.style.setProperty('--flash-color', hexToRgba(color, big ? 0.5 : 0.3));
-  laneEl.appendChild(flash);
-  setTimeout(() => flash.remove(), 260);
+  // 레인 전체가 짧게 밝아지는 플래시 (저사양 모드에서는 생략)
+  if(!lowSpecMode){
+    const flash = document.createElement('div');
+    flash.className = 'lane-flash';
+    flash.style.setProperty('--flash-color', hexToRgba(color, big ? 0.5 : 0.3));
+    laneEl.appendChild(flash);
+    setTimeout(() => flash.remove(), 260);
+  }
 
   // 중심 링 버스트
   const burst = document.createElement('div');
@@ -1509,7 +1539,7 @@ function spawnBurst(laneIdx, color, big){
   }
 
   // 사방으로 튀는 스파크 파티클 (저사양 모드에서는 개수를 크게 줄인다)
-  const sparkCount = lowSpecMode ? (big ? 5 : 3) : (big ? 11 : 6);
+  const sparkCount = lowSpecMode ? (big ? 4 : 2) : (big ? 11 : 6);
   for(let i=0;i<sparkCount;i++){
     const ang = (Math.PI*2*i/sparkCount) + (Math.random()*0.5 - 0.25);
     const dist = big ? (60 + Math.random()*55) : (28 + Math.random()*28);
