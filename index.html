@@ -4,14 +4,14 @@
 <base target="_top">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>&#xc131;&#xc7a5;&#xc77c;&#xae30; v3.1</title>
+<title>&#xc131;&#xc7a5;&#xc77c;&#xae30; v3.3</title>
 <script>
-/* \uc624\ub958 \uac10\uc9c0 v3.1: \uc544\ub798 \ud070 \ucf54\ub4dc\uac00 \uba48\ucdb0\ub3c4 \ud654\uba74\uc5d0 \uc774\uc720\ub97c \ubcf4\uc5ec\uc90c */
+/* \uc624\ub958 \uac10\uc9c0 v3.3: \uc544\ub798 \ud070 \ucf54\ub4dc\uac00 \uba48\ucdb0\ub3c4 \ud654\uba74\uc5d0 \uc774\uc720\ub97c \ubcf4\uc5ec\uc90c */
 /* ===================== SETTING =====================
    API_URL : Apps Script web app address (ends with /exec)
    ex) window.API_URL = 'https://script.google.com/macros/s/XXXX/exec';
    ==================================================== */
-window.API_URL = 'https://script.google.com/macros/s/AKfycbyTYG47CLCsE-tI5lj-I8MjJUs710dxrwoVJCrW_4AaiCxEvFyILWdnMauh2Cepm1Xx/exec';
+window.API_URL = 'https://script.google.com/macros/s/AKfycbzsKkM8MsLQgRscyrLfUw6FqptZgchgQdCAPrUih8GwwDGV9MG20N8uKsjfYvLknATk/exec';
 window.__errs = [];
 window.onerror = function(msg, src, line, col){
   var t = msg + (line ? ' (\uc904 ' + line + (col ? ', \uce78 ' + col : '') + ')' : '');
@@ -35,7 +35,7 @@ window.onerror = function(msg, src, line, col){
   if (window.showErr) { window.showErr('HTML_CODE', t); return; }
   window.__errs.push(t);
   var b = document.getElementById('bootMsg');
-  if (b) b.innerHTML = '<b style="color:#a12a1e">\u26a0\ufe0f \uc624\ub958 (v3.1)</b><br>' + window.__errs.join('<br>') + '<br><small>\uc774 \ud654\uba74\uc744 \uce90\ucc98\ud574\uc11c \ubcf4\ub0b4\uc8fc\uc138\uc694</small>';
+  if (b) b.innerHTML = '<b style="color:#a12a1e">\u26a0\ufe0f \uc624\ub958 (v3.3)</b><br>' + window.__errs.join('<br>') + '<br><small>\uc774 \ud654\uba74\uc744 \uce90\ucc98\ud574\uc11c \ubcf4\ub0b4\uc8fc\uc138\uc694</small>';
 };
 
 </script>
@@ -201,6 +201,21 @@ nav button.on{color:var(--accent);font-weight:700}
 .egrid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;padding:6px 8px 10px;height:190px;overflow-y:auto}
 .egrid button{font-size:26px;padding:4px 0;border-radius:8px}
 .egrid button:active{background:#e6e6e6}
+.unr{display:block;color:#e6b800;font-weight:800;font-size:11px;line-height:1.2;font-style:normal}
+.msg:not(.me) .tm{text-align:left}
+.msg.me .tm{text-align:right}
+nav button{position:relative}
+.nbadge{position:absolute;top:4px;left:calc(50% + 6px);min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:#ff4d4f;color:#fff;font-size:10.5px;font-weight:700;font-style:normal;line-height:18px;text-align:center}
+.gifbtn{font-size:12px!important;font-weight:800;letter-spacing:-.3px;border:1.5px solid #c9c9c9!important;border-radius:8px!important;width:34px!important;height:26px!important;margin:6px 2px}
+.gifbtn.on{border-color:var(--ink)!important;background:#f0f0f0}
+#gifChips .chip{flex:none;white-space:nowrap;padding:5px 11px}
+.gifres{height:250px;overflow-y:auto;padding:0 8px 8px}
+.gh{font-size:12px;font-weight:700;color:var(--sub);margin:8px 2px 6px}
+.gg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.gt{aspect-ratio:1;background:#eee;border-radius:8px;overflow:hidden;padding:0}
+.gt img{width:100%;height:100%;object-fit:cover;display:block}
+.gpow{text-align:center;font-size:10px;color:#aaa;margin:10px 0 2px;letter-spacing:.5px}
+.cgif{display:block;max-width:200px;border-radius:12px}
 .acts{position:fixed;inset:0;z-index:96;background:rgba(0,0,0,.35);display:flex;align-items:flex-end;justify-content:center}
 .acts .box2{background:#fff;width:100%;max-width:640px;border-radius:18px 18px 0 0;padding:8px 0 calc(10px + env(safe-area-inset-bottom))}
 .acts button{display:block;width:100%;padding:15px;font-size:15px;text-align:center}
@@ -254,7 +269,7 @@ nav button.on{color:var(--accent);font-weight:700}
 </head>
 <body>
 <div id="app">
-  <div id="bootMsg" style="padding:60px 24px;text-align:center;color:#8a837a;line-height:1.7">&#x1f331; &#xc131;&#xc7a5;&#xc77c;&#xae30; v3.1<br>&#xbd88;&#xb7ec;&#xc624;&#xb294; &#xc911;&#x2026;</div>
+  <div id="bootMsg" style="padding:60px 24px;text-align:center;color:#8a837a;line-height:1.7">&#x1f331; &#xc131;&#xc7a5;&#xc77c;&#xae30; v3.3<br>&#xbd88;&#xb7ec;&#xc624;&#xb294; &#xc911;&#x2026;</div>
   <!-- &#xb85c;&#xadf8;&#xc778; -->
   <section id="login" class="login hidden">
     <div style="font-size:52px">&#x1f331;</div>
@@ -271,7 +286,7 @@ nav button.on{color:var(--accent);font-weight:700}
   <section id="main" class="hidden">
     <header>
       <div class="hrow">
-        <div class="logo">&#xc131;&#xc7a5;&#xc77c;&#xae30;<small>v3.1</small></div>
+        <div class="logo">&#xc131;&#xc7a5;&#xc77c;&#xae30;<small>v3.3</small></div>
         <div class="hspace"></div>
         <button class="iconbtn" title="&#xc54c;&#xb9bc; &#xc124;&#xc815;" onclick="openNotify()">&#x1f514;</button>
         <button class="iconbtn" title="&#xc0c8;&#xb85c;&#xace0;&#xce68;" onclick="refreshAll()">&#x1f504;</button>
@@ -331,6 +346,7 @@ nav button.on{color:var(--accent);font-weight:700}
           <button class="iconbtn" id="plusBtn" onclick="togglePanel('attach')" title="&#xcca8;&#xbd80;">&#xff0b;</button>
           <textarea id="chatText" rows="1" placeholder="&#xba54;&#xc2dc;&#xc9c0; &#xc785;&#xb825;" oninput="autoGrow(this);updSend()" onkeydown="chatKey(event)" onfocus="closePanel()"></textarea>
           <button class="iconbtn" id="emoBtn" onclick="togglePanel('emoji')" title="&#xc774;&#xbaa8;&#xd2f0;&#xcf58;">&#x1f60a;</button>
+          <button class="iconbtn gifbtn" id="gifBtn" onclick="togglePanel('gif')" title="GIF">GIF</button>
           <button class="send" id="sendBtn" onclick="sendChatText()" disabled>&#xc804;&#xc1a1;</button>
         </div>
         <div class="panel hidden" id="pAttach">
@@ -340,6 +356,14 @@ nav button.on{color:var(--accent);font-weight:700}
             <button onclick="pick('cVideo')"><span style="background:#fdeaea">&#x1f3ac;</span>&#xb3d9;&#xc601;&#xc0c1;</button>
             <button onclick="pick('cFile')"><span style="background:#f1ecfd">&#x1f4c1;</span>&#xd30c;&#xc77c;</button>
           </div>
+        </div>
+        <div class="panel hidden" id="pGif">
+          <div style="display:flex;gap:6px;padding:8px 8px 4px">
+            <input id="gifQ" class="search" style="padding:8px 12px" placeholder="GIF &#xac80;&#xc0c9; (&#xc608;: &#xc0ac;&#xb791;, &#xace0;&#xb9c8;&#xc6cc;, &#xcd98;&#xc2dd;)" onkeydown="if(event.key==='Enter'&&!event.isComposing)searchGif(this.value)">
+            <button class="btn pri" style="white-space:nowrap;flex:none" onclick="searchGif($('gifQ').value)">&#xac80;&#xc0c9;</button>
+          </div>
+          <div class="chips" id="gifChips" style="padding:2px 8px 4px;flex-wrap:nowrap;overflow-x:auto"></div>
+          <div id="gifRes" class="gifres"></div>
         </div>
         <div class="panel hidden" id="pEmoji">
           <div class="etabs" id="eTabs"></div>
@@ -366,8 +390,8 @@ nav button.on{color:var(--accent);font-weight:700}
 <div id="loading" class="loading hidden"><div style="text-align:center"><div class="spin" style="margin:0 auto"></div><div id="loadMsg" style="margin-top:12px;font-size:14px;font-weight:600;color:var(--ink);line-height:1.5"></div></div></div>
 
 <script type="text/plain" id="appjs">
-/* \uc131\uc7a5\uc77c\uae30 \uc6f9\uc571 \ud654\uba74 v3.1 */
-const APP_VERSION = '3.1';
+/* \uc131\uc7a5\uc77c\uae30 \uc6f9\uc571 \ud654\uba74 v3.3 */
+const APP_VERSION = '3.3';
 const S = {
   pw: '', me: '', users: [], children: [], posts: [], comments: [], growth: [], chats: [],
   filter: '\uc804\uccb4', shown: 20, tab: 'board', gChild: '', metric: 'height', chart: null,
@@ -563,6 +587,7 @@ function enterMain(){
   $('meBtn').innerHTML = avatarHtml(S.me, 32);
   renderDbar(); renderFilters(); renderFeed(true); hydrate($('main'));
   ensureMedia().then(() => renderFeed()).catch(() => {});
+  if (S.tab !== 'chat') loadChats(false);
   showTab(S.tab);
 }
 function renderDbar(){
@@ -747,6 +772,7 @@ function showTab(t){
   document.querySelectorAll('nav button').forEach(b => b.classList.toggle('on', b.dataset.tab === t));
   if (t === 'growth') renderGrowth();
   if (t === 'album') renderAlbum(true);
+  updateChatBadge();
   if (t === 'chat'){ loadChats(true); startChatPoll(); setTimeout(padChat, 0); } else { stopChatPoll(); closePanel(); }
   window.scrollTo(0, t === 'chat' ? document.body.scrollHeight : 0);
 }
@@ -1433,16 +1459,17 @@ const EMOJI = {
 S.eTab = '\ud83d\ude00';
 function pick(id){ closePanel(); $(id).click(); }
 function togglePanel(which){
-  const at = $('pAttach'), em = $('pEmoji');
-  const open = which === 'attach' ? at : em, other = which === 'attach' ? em : at;
-  other.classList.add('hidden');
-  open.classList.toggle('hidden');
-  $('plusBtn').classList.toggle('on', !at.classList.contains('hidden'));
-  $('emoBtn').classList.toggle('on', !em.classList.contains('hidden'));
-  if (which === 'emoji' && !em.classList.contains('hidden')) renderEmoji();
+  const map = { attach: ['pAttach', 'plusBtn'], emoji: ['pEmoji', 'emoBtn'], gif: ['pGif', 'gifBtn'] };
+  Object.keys(map).forEach(k => {
+    const el = $(map[k][0]); if (!el) return;
+    if (k === which) el.classList.toggle('hidden'); else el.classList.add('hidden');
+    $(map[k][1]).classList.toggle('on', !el.classList.contains('hidden'));
+  });
+  if (which === 'emoji' && !$('pEmoji').classList.contains('hidden')) renderEmoji();
+  if (which === 'gif' && !$('pGif').classList.contains('hidden')) openGifPanel();
   padChat();
 }
-function closePanel(){ $('pAttach').classList.add('hidden'); $('pEmoji').classList.add('hidden'); $('plusBtn').classList.remove('on'); $('emoBtn').classList.remove('on'); padChat(); }
+function closePanel(){ ['pAttach','pEmoji','pGif'].forEach(id => $(id) && $(id).classList.add('hidden')); ['plusBtn','emoBtn','gifBtn'].forEach(id => $(id) && $(id).classList.remove('on')); padChat(); }
 function padChat(){ const h = $('cbar').offsetHeight; $('chatList').style.paddingBottom = (h + 20) + 'px'; if (nearBottom() || true) window.scrollTo(0, document.body.scrollHeight); }
 function renderEmoji(){
   EMOJI['\ud83d\udd58'] = lsGet('recentEmo', []);
@@ -1460,12 +1487,108 @@ function addEmo(e){
 }
 function updSend(){ $('sendBtn').disabled = !$('chatText').value.trim(); }
 
+/* ---------- GIF (GIPHY \u00b7 \uce74\uce74\uc624\ud504\ub80c\uc988 \uacf5\uc2dd \uc6b0\uc120) ---------- */
+const KAKAO_GIPHY = '@kakaofriends_official';
+// \ud55c\uae00 \uac80\uc0c9\uc5b4 \u2192 GIPHY \ud0dc\uadf8(\uc601\uc5b4)\ub85c \ud568\uaed8 \uac80\uc0c9
+const GIF_KO = { '\uc0ac\ub791':'love', '\ud558\ud2b8':'heart', '\uace0\ub9c8\uc6cc':'thank you', '\uac10\uc0ac':'thank you', '\ucd95\ud558':'congratulations', '\uc0dd\uc77c':'birthday',
+  '\uc6c3\uc74c':'lol', '\u314b\u314b':'lol', '\ud589\ubcf5':'happy', '\uae30\uc068':'happy', '\uc2e0\ub098':'excited', '\ucda4':'dance', '\ud654\ub0a8':'angry', '\ud654\ub098':'angry',
+  '\uc2ac\ud514':'sad', '\uc2ac\ud37c':'sad', '\uc6b8\uc74c':'cry', '\uc678\ub85c\uc6cc':'lonely', '\ub180\ub78c':'shocked', '\uae5c\uc9dd':'surprised', '\uc798\uc790':'good night', '\uad7f\ubc24':'good night',
+  '\uc548\ub155':'hello', '\ud558\uc774':'hi', '\ubc14\uc774':'bye', '\ubc30\uace0\ud30c':'hungry', '\ubc25':'eat', '\ucd5c\uace0':'thumbs up', '\uad7f':'good', '\uc751\uc6d0':'cheer', '\ud30c\uc774\ud305':'fighting',
+  '\ubbf8\uc548':'sorry', '\ubd80\ub044':'shy', '\uc878\ub824':'sleepy', '\ud53c\uace4':'tired', '\ucd98\uc2dd':'choonsik', '\ub77c\uc774\uc5b8':'ryan', '\uc5b4\ud53c\uce58':'apeach', '\uace0\uc591\uc774':'cat', '\uac15\uc544\uc9c0':'dog' };
+const GIF_CHIPS = ['\uc0ac\ub791', '\uace0\ub9c8\uc6cc', '\ucd95\ud558', '\uc6c3\uc74c', '\uc2e0\ub098', '\ud654\ub0a8', '\uc2ac\ud514', '\uc798\uc790', '\uc548\ub155', '\ubc30\uace0\ud30c', '\ucd5c\uace0', '\ucd98\uc2dd'];
+S.gif = { key: null, q: '', items: [], loading: false };
+async function gifKey(){
+  if (S.gif.key !== null) return S.gif.key;
+  try { S.gif.key = await api('getGifKey'); } catch(e){ S.gif.key = ''; }
+  return S.gif.key;
+}
+async function giphy(path, q, limit){
+  const k = await gifKey();
+  const u = 'https://api.giphy.com/v1/' + path + '?api_key=' + encodeURIComponent(k) + '&limit=' + (limit || 24) + '&rating=g&lang=ko' + (q != null ? '&q=' + encodeURIComponent(q) : '');
+  const r = await fetch(u); if (!r.ok) throw new Error('GIPHY ' + r.status);
+  const j = await r.json();
+  return (j.data || []).map(g => ({
+    id: g.id, title: g.title || '',
+    thumb: (g.images.fixed_width_small || g.images.fixed_width || g.images.downsized || {}).url,
+    url: (g.images.fixed_width || g.images.downsized || g.images.original || {}).url,
+    kakao: /kakaofriends/i.test((g.username || '') + ' ' + (g.user && g.user.username || '') + ' ' + (g.title || ''))
+  })).filter(g => g.thumb && g.url);
+}
+async function searchGif(q){
+  q = (q || '').trim(); S.gif.q = q; S.gif.loading = true; renderGif();
+  const en = GIF_KO[q] || '';
+  const term = en || q;
+  try {
+    const jobs = [
+      giphy('gifs/search', (KAKAO_GIPHY + ' ' + term).trim(), 30).catch(() => []),
+      giphy('stickers/search', (KAKAO_GIPHY + ' ' + term).trim(), 30).catch(() => []),
+      giphy('gifs/search', ('kakao friends ' + term).trim(), 24).catch(() => []),
+      q ? giphy('gifs/search', term, 30).catch(() => []) : giphy('gifs/trending', null, 30).catch(() => [])
+    ];
+    if (en && q !== en) jobs.push(giphy('gifs/search', q, 15).catch(() => []));
+    const [k1, k2, k3, all, ko] = await Promise.all(jobs);
+    const seen = {}, kakao = [], other = [];
+    [...k1, ...k2, ...k3.filter(g => g.kakao)].forEach(g => { if (!seen[g.id]){ seen[g.id] = 1; kakao.push(g); } });
+    [...(ko || []), ...all, ...k3].forEach(g => { if (!seen[g.id]){ seen[g.id] = 1; (g.kakao ? kakao : other).push(g); } });
+    S.gif.kakao = kakao; S.gif.other = other;
+  } catch(e){ S.gif.kakao = []; S.gif.other = []; toast('GIF \uac80\uc0c9 \uc2e4\ud328: ' + errMsg(e)); }
+  S.gif.loading = false; renderGif();
+}
+function renderGif(){
+  const box = $('gifRes'); if (!box) return;
+  if (S.gif.key === '') {
+    box.innerHTML = `<div style="padding:16px;font-size:13px;line-height:1.7;color:var(--sub)">GIF\ub97c \uc4f0\ub824\uba74 <b>GIPHY API \ud0a4</b>\uac00 \ud544\uc694\ud574\uc694.<br>
+      developers.giphy.com \uc5d0\uc11c \ubb34\ub8cc\ub85c \ubc1b\uc544 Code.gs \ub9e8 \uc704 <b>GIPHY_API_KEY</b>\uc5d0 \ub123\uace0 \ubc30\ud3ec\ud574 \uc8fc\uc138\uc694.</div>`; return;
+  }
+  if (S.gif.loading){ box.innerHTML = '<div class="empty" style="padding:30px 0">\ucc3e\ub294 \uc911\u2026</div>'; return; }
+  const tile = (g, i, list) => `<button class="gt" onclick="pickGif('${list}',${i})"><img src="${esc(g.thumb)}" loading="lazy" alt=""></button>`;
+  const k = S.gif.kakao || [], o = S.gif.other || [];
+  box.innerHTML = (k.length ? `<div class="gh">\ud83d\udc9b \uce74\uce74\uc624\ud504\ub80c\uc988</div><div class="gg">${k.map((g, i) => tile(g, i, 'kakao')).join('')}</div>` : '')
+    + (o.length ? `<div class="gh">${S.gif.q ? '\ub2e4\ub978 GIF' : '\uc778\uae30 GIF'}</div><div class="gg">${o.map((g, i) => tile(g, i, 'other')).join('')}</div>` : '')
+    + (!k.length && !o.length ? '<div class="empty" style="padding:30px 0">\uacb0\uacfc\uac00 \uc5c6\uc5b4\uc694</div>' : '')
+    + '<div class="gpow">Powered by GIPHY</div>';
+}
+function openGifPanel(){
+  $('gifChips').innerHTML = GIF_CHIPS.map(c => `<button class="chip" onclick="$('gifQ').value='${c}';searchGif('${c}')">${c}</button>`).join('');
+  gifKey().then(() => { if (S.gif.key && !S.gif.kakao) searchGif(''); else renderGif(); });
+}
+async function pickGif(list, i){
+  const g = (S.gif[list] || [])[i]; if (!g) return;
+  closePanel();
+  S.chats.push({ id: 'tmp', sender: S.me, text: '', time: nowStr(), attach: { kind: 'gif', url: g.url, name: g.title } });
+  renderChats(true);
+  try {
+    setChats(await api('sendChatGif', S.me, nameOf(S.me), g.url, g.title));
+    renderChats(true);
+    notifyFamily('\ud83d\udcac ' + nameOf(S.me), '\ud83c\udf9e\ufe0f GIF', 'speech_balloon');
+  } catch(e){ toast('\uc804\uc1a1 \uc2e4\ud328: ' + errMsg(e)); S.chats = S.chats.filter(m => m.id !== 'tmp'); renderChats(true); }
+}
+
+/* \uc77d\uc74c \uc22b\uc790: \uc0ac\ub78c\ub9c8\ub2e4 '\ub9c8\uc9c0\ub9c9\uc73c\ub85c \uc77d\uc740 \uc2dc\uac01'\uacfc \ube44\uad50\ud574\uc11c, \uc544\uc9c1 \uc548 \uc77d\uc740 \uc0ac\ub78c \uc218 */
+S.reads = {}; S.members = [];
+function setChats(r){
+  if (Array.isArray(r)) S.chats = r;
+  else if (r){ S.chats = r.chats || []; S.reads = r.reads || {}; S.members = r.members || []; }
+  updateChatBadge();
+}
+function unreadCount(m){
+  return S.members.filter(e => e !== m.sender && !((S.reads[e] || '') >= m.time)).length;
+}
+function updateChatBadge(){
+  const btn = document.querySelector('nav button[data-tab="chat"]'); if (!btn) return;
+  const mine = S.reads[S.me] || '';
+  const n = S.tab === 'chat' ? 0 : S.chats.filter(m => m.sender !== S.me && m.time > mine).length;
+  let b = btn.querySelector('.nbadge');
+  if (!b){ b = document.createElement('i'); b.className = 'nbadge'; btn.appendChild(b); }
+  b.textContent = n > 99 ? '99+' : n; b.style.display = n ? '' : 'none';
+}
 async function loadChats(scroll){
   try {
-    const list = await api('getChats');
-    const changed = !S.chats.length || list.length !== S.chats.length || (list[list.length-1]||{}).id !== (S.chats[S.chats.length-1]||{}).id;
-    S.chats = list;
-    if (changed) renderChats(scroll || nearBottom());
+    const viewing = S.tab === 'chat' && !document.hidden;
+    const before = S.chats.length + '|' + (S.chats[S.chats.length-1]||{}).id + '|' + JSON.stringify(S.reads);
+    setChats(await api('getChats', S.me, viewing));
+    const changed = before !== S.chats.length + '|' + (S.chats[S.chats.length-1]||{}).id + '|' + JSON.stringify(S.reads);
+    if ((changed || scroll) && S.tab === 'chat') renderChats(scroll || nearBottom());
   } catch(e){ if (scroll){ showErr('\ucc44\ud305 \ubd88\ub7ec\uc624\uae30', e); if (!S.chats.length) $('chatList').innerHTML = '<div class="empty">\ucc44\ud305\uc744 \ubd88\ub7ec\uc624\uc9c0 \ubabb\ud588\uc5b4\uc694</div>'; } }
 }
 function nearBottom(){ return window.innerHeight + window.scrollY > document.body.scrollHeight - 160; }
@@ -1519,6 +1642,8 @@ function renderChats(scroll){
     const showWho = !me && lastWho !== it.sender; lastWho = it.sender;
     const nx = items[k+1];
     const showTime = !nx || nx.sender !== it.sender || nx.time.slice(0,16) !== it.time.slice(0,16);
+    const lastM = it.group ? it.ms[it.ms.length-1] : it.m;
+    const unr = (lastM.id === 'tmp') ? S.members.filter(e => e !== S.me).length : unreadCount(lastM);
     let body, id;
     if (it.group){
       const ms = it.ms; id = ms[ms.length-1].id;
@@ -1533,6 +1658,9 @@ function renderChats(scroll){
       const m = it.m; id = m.id; let parts = '';
       if (m.photo) parts += `<div class="cimgs n1" style="margin-bottom:4px"><div class="ci" onclick="openMedia('chat',${midx[m.id]})"><img data-ref='${esc(JSON.stringify(m.photo))}' alt=""></div></div>`;
       if (m.attach && m.attach.kind === 'video') parts += `<div class="cimgs n1" style="margin-bottom:4px"><div class="ci" onclick="openMedia('chat',${midx[m.id]})"><img data-ref='${esc(JSON.stringify({id:m.attach.id}))}' alt=""><span class="pl">\u25b6</span></div></div>`;
+      if (m.attach && m.attach.kind === 'gif' && m.attach.url){
+        parts += `<img class="cgif" src="${esc(m.attach.url)}" alt="GIF" loading="lazy">`;
+      }
       if (m.attach && m.attach.kind === 'file'){
         const [ic, bg] = fileIcon(m.attach.name);
         parts += `<div class="fcard" onclick="downloadFile('${esc(m.attach.id)}','${esc(m.attach.name).replace(/'/g,'&#39;')}')"><div class="fi" style="background:${bg}">${ic}</div>
@@ -1543,7 +1671,7 @@ function renderChats(scroll){
     }
     html += `<div class="msg ${me?'me':''}" data-id="${esc(id)}">${!me ? (showWho ? avatarHtml(it.sender) : '<span style="width:36px;flex:none"></span>') : ''}
       <div>${showWho?`<div class="who">${esc(nameOf(it.sender))}</div>`:''}${body}</div>
-      ${showTime?`<span class="tm">${ampm(it.time)}</span>`:''}</div>`;
+      ${(showTime || unr) ? `<span class="tm">${unr ? `<b class="unr">${unr}</b>` : ''}${showTime ? ampm(it.time) : ''}</span>` : ''}</div>`;
   });
   html += S.uploads.map(u => `<div class="upl">${u.kind==='video'?'\ud83c\udfac':'\ud83d\udcce'} ${esc(u.name)}<div style="color:var(--sub);font-size:11px;margin-top:2px">${u.msg||('\uc5c5\ub85c\ub4dc \uc911 '+u.pct+'%')}</div><div class="pb"><i style="width:${u.pct}%"></i></div></div>`).join('');
   $('chatList').innerHTML = html || '<div class="empty">\uccab \uba54\uc2dc\uc9c0\ub97c \ubcf4\ub0b4\ubcf4\uc138\uc694</div>';
@@ -1573,13 +1701,15 @@ function msgActions(id){
     const act = e.target.dataset.a; a.remove(); if (!act || act === 'x') return;
     if (act === 'copy'){ try { await navigator.clipboard.writeText(m.text); toast('\ubcf5\uc0ac\ud588\uc5b4\uc694'); } catch(_){ toast('\ubcf5\uc0ac\uac00 \uc548 \ub3fc\uc694'); } }
     if (act === 'del' && confirm('\uc774 \uba54\uc2dc\uc9c0\ub97c \uc0ad\uc81c\ud560\uae4c\uc694?')){
-      try { S.chats = await api('deleteChat', S.me, id); renderChats(false); } catch(err){ toast(errMsg(err)); }
+      try { setChats(await api('deleteChat', S.me, id)); renderChats(false); } catch(err){ toast(errMsg(err)); }
     }
   };
   document.body.appendChild(a);
 }
 
 function startChatPoll(){ stopChatPoll(); S.chatTimer = setInterval(() => { if (!document.hidden && S.tab==='chat' && !S.uploads.length) loadChats(false); }, 5000); }
+setInterval(() => { if (S.me && !document.hidden && S.tab !== 'chat' && !$('main').classList.contains('hidden')) loadChats(false); }, 30000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden && S.tab === 'chat') loadChats(false); });
 function stopChatPoll(){ if (S.chatTimer) clearInterval(S.chatTimer); S.chatTimer = null; }
 function autoGrow(t){ t.style.height = 'auto'; t.style.height = Math.min(t.scrollHeight, 110) + 'px'; }
 function chatKey(e){ if (e.key === 'Enter' && !e.shiftKey && !e.isComposing && window.innerWidth > 700){ e.preventDefault(); sendChatText(); } }
@@ -1589,7 +1719,7 @@ async function sendChatText(){
   $('chatText').value = ''; autoGrow($('chatText')); updSend();
   S.chats.push({ id: 'tmp', sender: S.me, text: t, time: nowStr() });
   renderChats(true);
-  try { S.chats = await api('sendChat', S.me, nameOf(S.me), t, []); renderChats(true); notifyFamily('\ud83d\udcac ' + nameOf(S.me), t, 'speech_balloon'); }
+  try { setChats(await api('sendChat', S.me, nameOf(S.me), t, [])); renderChats(true); notifyFamily('\ud83d\udcac ' + nameOf(S.me), t, 'speech_balloon'); }
   catch(e){ toast('\uc804\uc1a1 \uc2e4\ud328: ' + errMsg(e)); S.chats = S.chats.filter(m => m.id !== 'tmp'); renderChats(true); }
 }
 async function sendPhotos(inp){
@@ -1601,7 +1731,7 @@ async function sendPhotos(inp){
     u.msg = '\ubcf4\ub0b4\ub294 \uc911\u2026'; renderChats(true);
     // 5\uc7a5\uc529 \ub098\ub220 \ubcf4\ub0b4\uae30
     for (let i = 0; i < imgs.length; i += 5){
-      S.chats = await api('sendChat', S.me, nameOf(S.me), '', imgs.slice(i, i+5));
+      setChats(await api('sendChat', S.me, nameOf(S.me), '', imgs.slice(i, i+5)));
       u.pct = 50 + Math.round(Math.min(imgs.length, i+5) / imgs.length * 50); renderChats(true);
     }
     notifyFamily('\ud83d\udcac ' + nameOf(S.me), '\ud83d\udcf7 \uc0ac\uc9c4 ' + imgs.length + '\uc7a5', 'speech_balloon');
@@ -1619,7 +1749,7 @@ async function sendBig(inp, kind){
   try {
     const id = await uploadBig(f, '', pct => { u.pct = pct; renderChats(true); });
     u.msg = '\ub4f1\ub85d \uc911\u2026'; renderChats(true);
-    S.chats = await api('sendChatFile', S.me, nameOf(S.me), { id, name: f.name, size: f.size, kind });
+    setChats(await api('sendChatFile', S.me, nameOf(S.me), { id, name: f.name, size: f.size, kind }));
     notifyFamily('\ud83d\udcac ' + nameOf(S.me), kind === 'video' ? '\ud83c\udfac \ub3d9\uc601\uc0c1' : '\ud83d\udcce ' + f.name, 'speech_balloon');
   } catch(e){ toast('\uc804\uc1a1 \uc2e4\ud328: ' + errMsg(e)); }
   S.uploads = S.uploads.filter(x => x !== u); renderChats(true);
@@ -1644,7 +1774,7 @@ window.addEventListener('popstate', () => { if ($('layer').children.length) clos
 start();
 </script>
 <script>
-/* v3.1 loader */
+/* v3.3 loader */
 (function(){
   var el = document.getElementById('appjs');
   window.__appCode = el ? el.textContent : '';
