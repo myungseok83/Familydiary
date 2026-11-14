@@ -4,14 +4,14 @@
 <base target="_top">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>&#xc131;&#xc7a5;&#xc77c;&#xae30; v3.0</title>
+<title>&#xc131;&#xc7a5;&#xc77c;&#xae30; v3.1</title>
 <script>
-/* \uc624\ub958 \uac10\uc9c0 v3.0: \uc544\ub798 \ud070 \ucf54\ub4dc\uac00 \uba48\ucdb0\ub3c4 \ud654\uba74\uc5d0 \uc774\uc720\ub97c \ubcf4\uc5ec\uc90c */
+/* \uc624\ub958 \uac10\uc9c0 v3.1: \uc544\ub798 \ud070 \ucf54\ub4dc\uac00 \uba48\ucdb0\ub3c4 \ud654\uba74\uc5d0 \uc774\uc720\ub97c \ubcf4\uc5ec\uc90c */
 /* ===================== SETTING =====================
    API_URL : Apps Script web app address (ends with /exec)
    ex) window.API_URL = 'https://script.google.com/macros/s/XXXX/exec';
    ==================================================== */
-window.API_URL = 'https://script.google.com/macros/s/AKfycbzjeqmui_WPEABDRykNc3bZ1QpuV6FL5TswVw7FZ17TjC8pzClGY6xpe2j_QqRM__vt/exec';
+window.API_URL = 'https://script.google.com/macros/s/AKfycbyTYG47CLCsE-tI5lj-I8MjJUs710dxrwoVJCrW_4AaiCxEvFyILWdnMauh2Cepm1Xx/exec';
 window.__errs = [];
 window.onerror = function(msg, src, line, col){
   var t = msg + (line ? ' (\uc904 ' + line + (col ? ', \uce78 ' + col : '') + ')' : '');
@@ -35,7 +35,7 @@ window.onerror = function(msg, src, line, col){
   if (window.showErr) { window.showErr('HTML_CODE', t); return; }
   window.__errs.push(t);
   var b = document.getElementById('bootMsg');
-  if (b) b.innerHTML = '<b style="color:#a12a1e">\u26a0\ufe0f \uc624\ub958 (v3.0)</b><br>' + window.__errs.join('<br>') + '<br><small>\uc774 \ud654\uba74\uc744 \uce90\ucc98\ud574\uc11c \ubcf4\ub0b4\uc8fc\uc138\uc694</small>';
+  if (b) b.innerHTML = '<b style="color:#a12a1e">\u26a0\ufe0f \uc624\ub958 (v3.1)</b><br>' + window.__errs.join('<br>') + '<br><small>\uc774 \ud654\uba74\uc744 \uce90\ucc98\ud574\uc11c \ubcf4\ub0b4\uc8fc\uc138\uc694</small>';
 };
 
 </script>
@@ -254,7 +254,7 @@ nav button.on{color:var(--accent);font-weight:700}
 </head>
 <body>
 <div id="app">
-  <div id="bootMsg" style="padding:60px 24px;text-align:center;color:#8a837a;line-height:1.7">&#x1f331; &#xc131;&#xc7a5;&#xc77c;&#xae30; v3.0<br>&#xbd88;&#xb7ec;&#xc624;&#xb294; &#xc911;&#x2026;</div>
+  <div id="bootMsg" style="padding:60px 24px;text-align:center;color:#8a837a;line-height:1.7">&#x1f331; &#xc131;&#xc7a5;&#xc77c;&#xae30; v3.1<br>&#xbd88;&#xb7ec;&#xc624;&#xb294; &#xc911;&#x2026;</div>
   <!-- &#xb85c;&#xadf8;&#xc778; -->
   <section id="login" class="login hidden">
     <div style="font-size:52px">&#x1f331;</div>
@@ -271,7 +271,7 @@ nav button.on{color:var(--accent);font-weight:700}
   <section id="main" class="hidden">
     <header>
       <div class="hrow">
-        <div class="logo">&#xc131;&#xc7a5;&#xc77c;&#xae30;<small>v3.0</small></div>
+        <div class="logo">&#xc131;&#xc7a5;&#xc77c;&#xae30;<small>v3.1</small></div>
         <div class="hspace"></div>
         <button class="iconbtn" title="&#xc54c;&#xb9bc; &#xc124;&#xc815;" onclick="openNotify()">&#x1f514;</button>
         <button class="iconbtn" title="&#xc0c8;&#xb85c;&#xace0;&#xce68;" onclick="refreshAll()">&#x1f504;</button>
@@ -366,8 +366,8 @@ nav button.on{color:var(--accent);font-weight:700}
 <div id="loading" class="loading hidden"><div style="text-align:center"><div class="spin" style="margin:0 auto"></div><div id="loadMsg" style="margin-top:12px;font-size:14px;font-weight:600;color:var(--ink);line-height:1.5"></div></div></div>
 
 <script type="text/plain" id="appjs">
-/* \uc131\uc7a5\uc77c\uae30 \uc6f9\uc571 \ud654\uba74 v3.0 */
-const APP_VERSION = '3.0';
+/* \uc131\uc7a5\uc77c\uae30 \uc6f9\uc571 \ud654\uba74 v3.1 */
+const APP_VERSION = '3.1';
 const S = {
   pw: '', me: '', users: [], children: [], posts: [], comments: [], growth: [], chats: [],
   filter: '\uc804\uccb4', shown: 20, tab: 'board', gChild: '', metric: 'height', chart: null,
@@ -556,7 +556,7 @@ function showWho(){
     `<button onclick="pickUser('${esc(u.email)}')">${avatarHtml(u.email)}<span>${esc(u.name)}</span></button>`).join('');
   hydrate($('whoGrid'));
 }
-function pickUser(email){ S.me = email; lsSet('me', email); enterMain(); }
+function pickUser(email){ S.me = email; S.ntfy = null; lsSet('me', email); enterMain(); }
 function switchUser(){ if (confirm('\uc0ac\uc6a9\uc790\ub97c \ubcc0\uacbd\ud560\uae4c\uc694?')) { S.me=''; lsSet('me',''); stopChatPoll(); showWho(); } }
 function enterMain(){
   $('login').classList.add('hidden'); $('main').classList.remove('hidden'); $('nav').classList.remove('hidden');
@@ -705,10 +705,40 @@ async function copyTopic(){
 }
 async function testNotify(){
   busy(true);
-  try { await api('testNotify', S.me); toast('\ud14c\uc2a4\ud2b8 \uc54c\ub9bc\uc744 \ubcf4\ub0c8\uc5b4\uc694. \ud3f0\uc744 \ud655\uc778\ud558\uc138\uc694'); }
-  catch(e){ toast(errMsg(e)); }
+  try {
+    const info = await api('getNotifyInfo', S.me);
+    const r = await ntfySend(info.server, info.topic, '\ud83c\udf31 \uc131\uc7a5\uc77c\uae30 \ud14c\uc2a4\ud2b8', '\uc54c\ub9bc\uc774 \uc798 \uc640\uc694!', 'tada');
+    if (!r.ok) throw new Error('ntfy \uc751\ub2f5 ' + r.status);
+    toast('\ud14c\uc2a4\ud2b8 \uc54c\ub9bc\uc744 \ubcf4\ub0c8\uc5b4\uc694. \ud3f0\uc744 \ud655\uc778\ud558\uc138\uc694');
+  } catch(e){ toast('\uc54c\ub9bc \uc804\uc1a1 \uc2e4\ud328: ' + errMsg(e)); }
   busy(false);
 }
+
+/* ---------- \ud3f0 \uc54c\ub9bc: \ud654\uba74(\ud3f0)\uc5d0\uc11c ntfy\ub85c \uc9c1\uc811 \ubcf4\ub0c4 ---------- */
+S.ntfy = null;    // { enabled, server, showContent, topics }
+async function ntfyTargets(){
+  if (S.ntfy) return S.ntfy;
+  try { S.ntfy = await api('getNotifyTargets', S.me); } catch(e){ S.ntfy = { enabled: false, topics: [] }; }
+  return S.ntfy;
+}
+function ntfyClick(){ return IN_GAS ? '' : location.origin + location.pathname; }
+function ntfySend(server, topic, title, message, tag){
+  const q = ['title=' + encodeURIComponent(title)];
+  if (tag) q.push('tags=' + encodeURIComponent(tag));
+  const c = ntfyClick(); if (c) q.push('click=' + encodeURIComponent(c));
+  return fetch(server.replace(/\/+$/, '') + '/' + encodeURIComponent(topic) + '?' + q.join('&'),
+    { method: 'POST', body: String(message || ' ') });
+}
+// \uac00\uc871(\ub098 \uc81c\uc678)\uc5d0\uac8c \uc54c\ub9bc \u2014 \uc2e4\ud328\ud574\ub3c4 \uc800\uc7a5\uc5d0\ub294 \uc601\ud5a5 \uc5c6\uc74c
+async function notifyFamily(title, message, tag){
+  try {
+    const t = await ntfyTargets();
+    if (!t.enabled || !t.topics.length) return;
+    const ti = t.showContent ? title : '\uc131\uc7a5\uc77c\uae30', msg = t.showContent ? String(message || '').slice(0, 300) : '\uc0c8 \uc18c\uc2dd\uc774 \uc788\uc5b4\uc694';
+    await Promise.all(t.topics.map(tp => ntfySend(t.server, tp, ti, msg, tag).catch(() => {})));
+  } catch(e){}
+}
+function countText(nP, nV){ return [nP ? '\uc0ac\uc9c4 ' + nP + '\uc7a5' : '', nV ? '\ub3d9\uc601\uc0c1 ' + nV + '\uac1c' : ''].filter(Boolean).join(', '); }
 
 /* ---------- \ud0ed ---------- */
 function showTab(t){
@@ -813,7 +843,11 @@ function renderComments(pid){
 async function addCmt(pid){
   const t = $('cText').value.trim(); if (!t) return;
   $('cText').value = '';
-  try { S.comments = await api('addComment', S.me, pid, t); renderComments(pid); renderFeed(); }
+  try {
+    S.comments = await api('addComment', S.me, pid, t); renderComments(pid); renderFeed();
+    const post = S.posts.find(x => x.id === pid);
+    notifyFamily('\ud83d\udcac ' + nameOf(S.me) + '\ub2d8\uc758 \ub313\uae00' + (post ? ' \u00b7 ' + post.title : ''), t, 'speech_balloon');
+  }
   catch(e){ toast(errMsg(e)); }
 }
 async function delComment(cid, pid){
@@ -1016,7 +1050,10 @@ async function uploadToPost(postId, files, notifyAfter, original){
       } catch(e){ fail++; showErr((it.kind === 'video' ? '\ub3d9\uc601\uc0c1' : '\uc0ac\uc9c4') + ' \uc62c\ub9ac\uae30 (' + it.file.name + ')', e); }
     });
   }
-  if (notifyAfter && (photos.length || videos.length)) api('notifyMedia', S.me, postId, photos.length, videos.length).catch(() => {});
+  if (notifyAfter && (photos.length || videos.length)){
+    const post = S.posts.find(x => x.id === postId);
+    notifyFamily('\ud83d\uddbc\ufe0f ' + nameOf(S.me) + '\ub2d8\uc774 ' + countText(photos.length, videos.length) + '\uc744 \ucd94\uac00\ud588\uc5b4\uc694', post ? post.title : '', 'frame_with_picture');
+  }
   S.media = null; S.mediaP = null;           // \uc568\ubc94\u00b7\uc0c1\uc138\ud654\uba74 \uc0c8\ub85c \ubd88\ub7ec\uc624\uae30
   return fail;
 }
@@ -1044,6 +1081,8 @@ async function savePost(editId){
         totalPhotos: files.filter(f => f.kind === 'photo').length, totalVideos: files.filter(f => f.kind === 'video').length });
       S.posts = r.posts; postId = r.id;
       rest = files.filter(f => !first.includes(f));
+      const ct = countText(files.filter(f => f.kind === 'photo').length, files.filter(f => f.kind === 'video').length);
+      notifyFamily('\ud83d\udcd6 ' + nameOf(S.me) + '\ub2d8\uc774 \uc0c8 \uc77c\uae30\ub97c \uc62c\ub838\uc5b4\uc694', title + (ct ? ' (' + ct + ')' : ''), 'notebook');
     }
     let fail = 0;
     if (rest.length) fail = await uploadToPost(postId, rest, !!editId, original);
@@ -1550,7 +1589,7 @@ async function sendChatText(){
   $('chatText').value = ''; autoGrow($('chatText')); updSend();
   S.chats.push({ id: 'tmp', sender: S.me, text: t, time: nowStr() });
   renderChats(true);
-  try { S.chats = await api('sendChat', S.me, nameOf(S.me), t, []); renderChats(true); }
+  try { S.chats = await api('sendChat', S.me, nameOf(S.me), t, []); renderChats(true); notifyFamily('\ud83d\udcac ' + nameOf(S.me), t, 'speech_balloon'); }
   catch(e){ toast('\uc804\uc1a1 \uc2e4\ud328: ' + errMsg(e)); S.chats = S.chats.filter(m => m.id !== 'tmp'); renderChats(true); }
 }
 async function sendPhotos(inp){
@@ -1565,6 +1604,7 @@ async function sendPhotos(inp){
       S.chats = await api('sendChat', S.me, nameOf(S.me), '', imgs.slice(i, i+5));
       u.pct = 50 + Math.round(Math.min(imgs.length, i+5) / imgs.length * 50); renderChats(true);
     }
+    notifyFamily('\ud83d\udcac ' + nameOf(S.me), '\ud83d\udcf7 \uc0ac\uc9c4 ' + imgs.length + '\uc7a5', 'speech_balloon');
   } catch(e){ toast('\uc0ac\uc9c4 \uc804\uc1a1 \uc2e4\ud328: ' + errMsg(e)); }
   S.uploads = S.uploads.filter(x => x !== u); renderChats(true);
 }
@@ -1580,6 +1620,7 @@ async function sendBig(inp, kind){
     const id = await uploadBig(f, '', pct => { u.pct = pct; renderChats(true); });
     u.msg = '\ub4f1\ub85d \uc911\u2026'; renderChats(true);
     S.chats = await api('sendChatFile', S.me, nameOf(S.me), { id, name: f.name, size: f.size, kind });
+    notifyFamily('\ud83d\udcac ' + nameOf(S.me), kind === 'video' ? '\ud83c\udfac \ub3d9\uc601\uc0c1' : '\ud83d\udcce ' + f.name, 'speech_balloon');
   } catch(e){ toast('\uc804\uc1a1 \uc2e4\ud328: ' + errMsg(e)); }
   S.uploads = S.uploads.filter(x => x !== u); renderChats(true);
 }
@@ -1603,7 +1644,7 @@ window.addEventListener('popstate', () => { if ($('layer').children.length) clos
 start();
 </script>
 <script>
-/* v3.0 loader */
+/* v3.1 loader */
 (function(){
   var el = document.getElementById('appjs');
   window.__appCode = el ? el.textContent : '';
