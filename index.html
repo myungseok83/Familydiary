@@ -4,9 +4,9 @@
 <base target="_top">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>&#xc131;&#xc7a5;&#xc77c;&#xae30; v3.3</title>
+<title>&#xc131;&#xc7a5;&#xc77c;&#xae30; v3.4</title>
 <script>
-/* \uc624\ub958 \uac10\uc9c0 v3.3: \uc544\ub798 \ud070 \ucf54\ub4dc\uac00 \uba48\ucdb0\ub3c4 \ud654\uba74\uc5d0 \uc774\uc720\ub97c \ubcf4\uc5ec\uc90c */
+/* \uc624\ub958 \uac10\uc9c0 v3.4: \uc544\ub798 \ud070 \ucf54\ub4dc\uac00 \uba48\ucdb0\ub3c4 \ud654\uba74\uc5d0 \uc774\uc720\ub97c \ubcf4\uc5ec\uc90c */
 /* ===================== SETTING =====================
    API_URL : Apps Script web app address (ends with /exec)
    ex) window.API_URL = 'https://script.google.com/macros/s/XXXX/exec';
@@ -35,7 +35,7 @@ window.onerror = function(msg, src, line, col){
   if (window.showErr) { window.showErr('HTML_CODE', t); return; }
   window.__errs.push(t);
   var b = document.getElementById('bootMsg');
-  if (b) b.innerHTML = '<b style="color:#a12a1e">\u26a0\ufe0f \uc624\ub958 (v3.3)</b><br>' + window.__errs.join('<br>') + '<br><small>\uc774 \ud654\uba74\uc744 \uce90\ucc98\ud574\uc11c \ubcf4\ub0b4\uc8fc\uc138\uc694</small>';
+  if (b) b.innerHTML = '<b style="color:#a12a1e">\u26a0\ufe0f \uc624\ub958 (v3.4)</b><br>' + window.__errs.join('<br>') + '<br><small>\uc774 \ud654\uba74\uc744 \uce90\ucc98\ud574\uc11c \ubcf4\ub0b4\uc8fc\uc138\uc694</small>';
 };
 
 </script>
@@ -269,7 +269,7 @@ nav button{position:relative}
 </head>
 <body>
 <div id="app">
-  <div id="bootMsg" style="padding:60px 24px;text-align:center;color:#8a837a;line-height:1.7">&#x1f331; &#xc131;&#xc7a5;&#xc77c;&#xae30; v3.3<br>&#xbd88;&#xb7ec;&#xc624;&#xb294; &#xc911;&#x2026;</div>
+  <div id="bootMsg" style="padding:60px 24px;text-align:center;color:#8a837a;line-height:1.7">&#x1f331; &#xc131;&#xc7a5;&#xc77c;&#xae30; v3.4<br>&#xbd88;&#xb7ec;&#xc624;&#xb294; &#xc911;&#x2026;</div>
   <!-- &#xb85c;&#xadf8;&#xc778; -->
   <section id="login" class="login hidden">
     <div style="font-size:52px">&#x1f331;</div>
@@ -286,7 +286,7 @@ nav button{position:relative}
   <section id="main" class="hidden">
     <header>
       <div class="hrow">
-        <div class="logo">&#xc131;&#xc7a5;&#xc77c;&#xae30;<small>v3.3</small></div>
+        <div class="logo">&#xc131;&#xc7a5;&#xc77c;&#xae30;<small>v3.4</small></div>
         <div class="hspace"></div>
         <button class="iconbtn" title="&#xc54c;&#xb9bc; &#xc124;&#xc815;" onclick="openNotify()">&#x1f514;</button>
         <button class="iconbtn" title="&#xc0c8;&#xb85c;&#xace0;&#xce68;" onclick="refreshAll()">&#x1f504;</button>
@@ -390,8 +390,8 @@ nav button{position:relative}
 <div id="loading" class="loading hidden"><div style="text-align:center"><div class="spin" style="margin:0 auto"></div><div id="loadMsg" style="margin-top:12px;font-size:14px;font-weight:600;color:var(--ink);line-height:1.5"></div></div></div>
 
 <script type="text/plain" id="appjs">
-/* \uc131\uc7a5\uc77c\uae30 \uc6f9\uc571 \ud654\uba74 v3.3 */
-const APP_VERSION = '3.3';
+/* \uc131\uc7a5\uc77c\uae30 \uc6f9\uc571 \ud654\uba74 v3.4 */
+const APP_VERSION = '3.4';
 const S = {
   pw: '', me: '', users: [], children: [], posts: [], comments: [], growth: [], chats: [],
   filter: '\uc804\uccb4', shown: 20, tab: 'board', gChild: '', metric: 'height', chart: null,
@@ -567,7 +567,8 @@ async function loadInit(){
   const d = await api('init');
   if (!d) throw new Error('\uc11c\ubc84 \uc751\ub2f5\uc774 \ube44\uc5b4 \uc788\uc5b4\uc694 (Code.gs\uc640 Index \ubc84\uc804\uc774 \uac19\uc740\uc9c0 \ud655\uc778)');
   (d.errors || []).forEach(x => showErr('\uc11c\ubc84', x));
-  if (d.version && d.version !== APP_VERSION) showErr('\ubc84\uc804 \ubd88\uc77c\uce58', '\ud654\uba74 v' + APP_VERSION + ' / \uc11c\ubc84 v' + d.version + ' \u2014 \ub450 \ud30c\uc77c\uc744 \uac19\uc740 \ubc84\uc804\uc73c\ub85c \ub9de\ucdb0\uc8fc\uc138\uc694');
+  // \uc790\ub3d9 \ubc30\ud3ec\uc5d0\uc11c\ub294 \ud654\uba74\u00b7\uc11c\ubc84\uac00 \uba87 \ubd84 \ucc28\uc774\ub85c \ubc14\ub00c\ubbc0\ub85c, \ud070 \ubc84\uc804(3.x \u2192 4.x)\uc774 \ub2e4\ub97c \ub54c\ub9cc \uc54c\ub9bc
+  if (d.version && String(d.version).split('.')[0] !== APP_VERSION.split('.')[0]) showErr('\ubc84\uc804 \ubd88\uc77c\uce58', '\ud654\uba74 v' + APP_VERSION + ' / \uc11c\ubc84 v' + d.version + ' \u2014 \ub450 \ud30c\uc77c\uc744 \uac19\uc740 \ubc84\uc804\uc73c\ub85c \ub9de\ucdb0\uc8fc\uc138\uc694');
   Object.assign(S, { users: d.users, children: d.children, posts: d.posts, comments: d.comments, growth: d.growth });
   if (!S.gChild && S.children.length) S.gChild = S.children[0].name;
   busy(false);
@@ -1774,7 +1775,7 @@ window.addEventListener('popstate', () => { if ($('layer').children.length) clos
 start();
 </script>
 <script>
-/* v3.3 loader */
+/* v3.4 loader */
 (function(){
   var el = document.getElementById('appjs');
   window.__appCode = el ? el.textContent : '';
